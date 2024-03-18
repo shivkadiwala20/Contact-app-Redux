@@ -45,6 +45,7 @@ export function EditContact() {
   //   return val;
   // });
   //   console.log("EditContactData", editedData);
+  const [image, setImage] = useState("");
   const location = useLocation();
   const sessionData = getCurrentUser();
   const activeUser = sessionData.userId;
@@ -72,7 +73,6 @@ export function EditContact() {
 
   const navigate = useNavigate();
   const inputRef = useRef(null);
-  const [image, setImage] = useState("");
 
   function getUserId() {
     return Math.floor(100000 + Math.random() * 900000);
@@ -86,21 +86,46 @@ export function EditContact() {
         return newObj;
       }, {});
 
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      // console.log(reader.result);
-      contactData.Avatar = reader.result;
-      getAddContactDetails(contactData);
-      const newData = saveAddContactDetails({
-        ...contactData,
-        userId: getUserId(),
-      });
+    if (image) {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        // console.log(reader.result);
+        contactData.Avatar = reader.result;
+        getAddContactDetails(contactData);
+        const newData = setContactInStorage({
+          ...contactData,
+          userId: getUserId(),
+        });
 
+        if (JSON.stringify(existingData) !== JSON.stringify(contactData)) {
+          existingData.name = contactData.name;
+          existingData.number = contactData.number;
+          existingData.email = contactData.email;
+          existingData.Avatar = contactData.Avatar;
+          existingData.userId = editedContact.userId;
+          const editedData = editContact([activeUser]);
+          const indexToUpdate = editedData.findIndex(
+            (obj) => obj.userId === editedContact.userId
+          );
+          editedData[indexToUpdate] = existingData;
+          setContactInStorage([activeUser], editedData);
+
+          console.log("index", editedData);
+        }
+
+        navigate("/home/viewcontact");
+        console.log(newData);
+      });
+      reader.readAsDataURL(image);
+      console.log("CotactData", contactData);
+
+      contactData.Avatar = image;
+    } else {
       if (JSON.stringify(existingData) !== JSON.stringify(contactData)) {
         existingData.name = contactData.name;
         existingData.number = contactData.number;
         existingData.email = contactData.email;
-        existingData.avatar = contactData.avatar;
+        existingData.Avatar = contactData.Avatar;
         existingData.userId = editedContact.userId;
         const editedData = editContact([activeUser]);
         const indexToUpdate = editedData.findIndex(
@@ -113,12 +138,7 @@ export function EditContact() {
       }
 
       navigate("/home/viewcontact");
-      console.log(newData);
-    });
-    reader.readAsDataURL(image);
-    console.log("CotactData", contactData);
-
-    contactData.Avatar = image;
+    }
 
     // saveAddContactDetails(contactData);
   };
@@ -150,11 +170,15 @@ export function EditContact() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, width: 86, height: 86 }} onClick={handleClick}>
-            {/* <Avatar alt="Shiv" src="/static/images/avatar/1.jpg" /> */}
-            {image ? (
+          <Avatar
+            sx={{ m: 1, width: 86, height: 86 }}
+            src={image ? URL.createObjectURL(image) : editedContact.Avatar}
+            onClick={handleClick}
+          />
+          {/* <Avatar alt="Shiv" src="/static/images/avatar/1.jpg" /> */}
+          {/* {image ? (
               <img
-                src={URL.createObjectURL(image)}
+                src={URL.createObjectURL(image)} 
                 className="image-display-after "
                 alt="shiv-img"
               />
@@ -164,16 +188,17 @@ export function EditContact() {
                 alt=""
                 className="image-display-before "
               />
-            )}
-            <input
-              type="file"
-              ref={inputRef}
-              onChange={handleImageChange}
-              style={{ display: "none" }}
-            />
-          </Avatar>
+            )} */}
+          <input
+            type="file"
+            ref={inputRef}
+            onChange={handleImageChange}
+            accept="image/png, image/gif, image/jpeg"
+            style={{ display: "none" }}
+          />
+
           <Typography component="h1" variant="h5">
-            Upload Image
+            Update Image
           </Typography>
           <Box
             component="form"
@@ -232,14 +257,6 @@ export function EditContact() {
               sx={{ mt: 3, mb: 2 }}
             >
               Update Contact
-            </Button>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 0.5, mb: 2 }}
-            >
-              Reset Contact
             </Button>
           </Box>
         </Box>

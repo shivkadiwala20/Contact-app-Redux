@@ -8,6 +8,8 @@ import { AddContact } from "./Pages/ContactPage/AddContact";
 import ViewContact from "./Pages/ContactPage/ViewContact";
 import { EditContact } from "./Pages/ContactPage/EditContact";
 import Welcome from "./Components/Welcome";
+import Protected from "./Components/Protected";
+import Import from "./Components/Import";
 
 const router = createBrowserRouter([
   {
@@ -23,16 +25,16 @@ const router = createBrowserRouter([
     element: <ContactPage />,
     children: [
       {
-        path: "",
-        element: <Welcome />,
-      },
-      {
         path: "addcontact",
         element: <AddContact />,
       },
       {
         path: "viewcontact",
         element: <ViewContact />,
+      },
+      {
+        path: "import",
+        element: <Import />,
       },
       {
         path: "edit",

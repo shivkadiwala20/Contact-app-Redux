@@ -9,7 +9,7 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useState, forwardRef } from "react";
+import { useState, forwardRef, useEffect } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import MuiAlert from "@mui/material/Alert";
@@ -19,9 +19,11 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  getCurrentUser,
   getFormDataFromLocalStorage,
   setCurrentUser,
 } from "../Storage/Storage";
+import { Link } from "react-router-dom";
 
 const schema = yup
   .object({
@@ -68,8 +70,8 @@ function SignIn() {
   const {
     register,
     handleSubmit,
-
-    formState: { errors },
+    setError,
+    formState: { errors, isSubmitting },
   } = useForm({
     mode: "onBlur",
     resolver: yupResolver(schema),
@@ -80,30 +82,36 @@ function SignIn() {
   // }
 
   const onSubmit = async (data) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     console.log("Data from SignIn", JSON.stringify(data));
     const storedFormData = getFormDataFromLocalStorage();
     console.log("datauserId", data);
-
+    if (storedFormData.length === 0 || storedFormData == null) {
+      console.log("nottt");
+      setError("root", {
+        message: "User Does Not Exist",
+      });
+    }
     // setCurrentUser(storedFormData);
-    storedFormData.forEach((val) => {
-      console.log("Data From LocalStorage", JSON.stringify(val));
-      if (val) {
-        if (val.email === data.email && val.password === data.password) {
+    for (let val of storedFormData) {
+      if (val.email === data.email) {
+        console.log("firstIf");
+        if (val.password !== data.password) {
+          setError("root", {
+            message: "Credentials Does Not Match",
+          });
+        } else {
           console.log("Credential match");
           console.log("vvv", val.userId);
           setCurrentUser({ ...data, userId: val.userId });
           setOpen(true);
           setTimeout(() => {
-            navigate("/home", { state: { email: val.email } });
+            navigate("/home");
           }, 1000);
-        } else {
-          console.log("Credential Does not match");
-          // alert("Credential Does not match");
+          break;
         }
-      } else {
-        // alert("User Doest Not exists");
       }
-    });
+    }
     // console.log(newData);
   };
 
@@ -176,6 +184,10 @@ function SignIn() {
                       <Typography component="h1" variant="h4">
                         Sign In
                       </Typography>
+
+                      {errors.root && (
+                        <p style={{ color: "yellow" }}>{errors.root.message}</p>
+                      )}
                     </Box>
                     <Box sx={{ mt: 2 }} />
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -227,9 +239,10 @@ function SignIn() {
                               color: "#ffffff",
                               minWidth: "170px",
                               backgroundColor: "rgb(76,82,86)",
+                              disabled: { isSubmitting },
                             }}
                           >
-                            Sign in
+                            {isSubmitting ? "SIGN IN...." : "SIGN IN"}
                           </Button>
                         </Grid>
                         <Grid item xs={12} sx={{ ml: "3em", mr: "3em" }}>

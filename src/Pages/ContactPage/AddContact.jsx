@@ -11,12 +11,20 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useRef, useState } from "react";
+import { useRef, useState, forwardRef } from "react";
 import "../ContactPage/AddContact.css";
 import { useNavigate } from "react-router-dom";
 import { saveAddContactDetails } from "../../Storage/Storage";
 import { getAddContactDetails } from "../../Storage/Storage";
+import Slide from "@mui/material/Slide";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
 const defaultTheme = createTheme();
+
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const schema = yup
 
@@ -34,6 +42,9 @@ const schema = yup
   .required();
 
 export function AddContact() {
+  const vertical = "top";
+  const horizontal = "right";
+  const [open, setOpen] = useState(false);
   const {
     register,
     handleSubmit,
@@ -59,22 +70,39 @@ export function AddContact() {
     // console.log("SessionData", sessionData.userId);
     // saveAddContactDetails(contactData);
 
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      // console.log(reader.result);
-      contactData.Avatar = reader.result;
+    if (image) {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        // console.log(reader.result);
+        contactData.Avatar = reader.result;
+        getAddContactDetails(contactData);
+        const newData = saveAddContactDetails({
+          ...contactData,
+          userId: getUserId(),
+        });
+
+        console.log(newData);
+      });
+      reader.readAsDataURL(image);
+      console.log("CotactData", contactData);
+
+      contactData.Avatar = image;
+      setOpen(true);
+      setTimeout(() => {
+        navigate("/home/viewcontact");
+      }, 1000);
+    } else {
+      contactData.Avatar = " ";
       getAddContactDetails(contactData);
       const newData = saveAddContactDetails({
         ...contactData,
         userId: getUserId(),
       });
-      navigate("/home/viewcontact");
-      console.log(newData);
-    });
-    reader.readAsDataURL(image);
-    console.log("CotactData", contactData);
-
-    contactData.Avatar = image;
+      setOpen(true);
+      setTimeout(() => {
+        navigate("/home/viewcontact");
+      }, 1000);
+    }
 
     // saveAddContactDetails(contactData);
   };
@@ -94,21 +122,52 @@ export function AddContact() {
     // reader.readAsDataURL(file);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  function TransitionLeft(props) {
+    return <Slide {...props} direction="left" />;
+  }
+
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ m: 1, width: 86, height: 86 }} onClick={handleClick}>
+    <>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        TransitionComponent={TransitionLeft}
+        anchorOrigin={{ vertical, horizontal }}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Contact Added SuccessFully!!
+        </Alert>
+      </Snackbar>
+      <ThemeProvider theme={defaultTheme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 8,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar
+              sx={{ m: 1, width: 86, height: 86 }}
+              onClick={handleClick}
+              src={
+                image
+                  ? URL.createObjectURL(image)
+                  : require("../bg/456322.webp")
+              }
+            />
             {/* <Avatar alt="Shiv" src="/static/images/avatar/1.jpg" /> */}
-            {image ? (
+            {/* {image ? (
               <img
                 src={URL.createObjectURL(image)}
                 className="image-display-after "
@@ -120,79 +179,81 @@ export function AddContact() {
                 alt=""
                 className="image-display-before "
               />
-            )}
+            )} */}
             <input
               type="file"
               ref={inputRef}
               onChange={handleImageChange}
+              accept="image/png, image/gif, image/jpeg"
               style={{ display: "none" }}
             />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Upload Image
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Name"
-              name="name"
-              autoComplete="name"
-              {...register("name")}
-            />
-            {errors.name && (
-              <span style={{ color: "red", fontSize: "12px" }}>
-                {errors.name?.message}
-              </span>
-            )}
-            <TextField
-              fullWidth
-              id="email"
-              label="Email"
-              type="email"
-              name="email"
-              {...register("email")}
-            />
-            {errors.email && (
-              <span style={{ color: "red", fontSize: "12px" }}>
-                {errors.email?.message}
-              </span>
-            )}
 
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="phone"
-              label="Phone Number"
-              type="tel"
-              id="phone"
-              {...register("phone")}
-            />
-            {errors.phone && (
-              <span style={{ color: "red", fontSize: "12px" }}>
-                {errors.phone?.message}
-              </span>
-            )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              disabled={isSubmitting}
+            <Typography component="h1" variant="h5">
+              Upload Image
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
+              sx={{ mt: 1 }}
             >
-              {isSubmitting ? "Adding..." : "Add Contact"}
-            </Button>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="name"
+                label="Name"
+                name="name"
+                autoComplete="name"
+                {...register("name")}
+              />
+              {errors.name && (
+                <span style={{ color: "red", fontSize: "12px" }}>
+                  {errors.name?.message}
+                </span>
+              )}
+              <TextField
+                fullWidth
+                id="email"
+                label="Email"
+                type="email"
+                name="email"
+                {...register("email")}
+              />
+              {errors.email && (
+                <span style={{ color: "red", fontSize: "12px" }}>
+                  {errors.email?.message}
+                </span>
+              )}
+
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="phone"
+                label="Phone Number"
+                type="tel"
+                id="phone"
+                {...register("phone")}
+              />
+              {errors.phone && (
+                <span style={{ color: "red", fontSize: "12px" }}>
+                  {errors.phone?.message}
+                </span>
+              )}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Adding..." : "Add Contact"}
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+        </Container>
+      </ThemeProvider>
+    </>
   );
 }

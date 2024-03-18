@@ -72,7 +72,7 @@ export default function SingUp() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    mode: "all",
+    mode: "onBlur",
     resolver: yupResolver(schema),
   });
 

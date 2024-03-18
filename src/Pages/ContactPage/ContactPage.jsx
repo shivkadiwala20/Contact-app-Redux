@@ -28,6 +28,17 @@ export default function ContactPage() {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const sessionData = getCurrentUser();
+    const activeUser = sessionData.userId;
+    console.log("loginv", activeUser);
+    if (!activeUser) {
+      navigate("login");
+    }
+  }, [navigate]);
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -44,27 +55,18 @@ export default function ContactPage() {
   const vertical = "top";
   const horizontal = "right";
 
-  const navigate = useNavigate();
-
   function logout() {
     sessionStorage.removeItem("formData");
     navigate("/login");
   }
-
-  // const location = useLocation();
-
-  // const userDetails = location.state
-  //   ? location.state.email.split("@")[0]
-  //   : null;
-  // const username = userDetails;
 
   const [username, setUsername] = useState("");
 
   useEffect(() => {
     const data = getCurrentUser();
     console.log("contactPage", data);
-    if (data) {
-      setUsername(data.email.split("@")[0]);
+    if (data.length > 0 || data !== null) {
+      setUsername(data.email ? data.email.split("@")[0] : "");
     }
   }, []);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -81,8 +83,9 @@ export default function ContactPage() {
     const sessionData = getCurrentUser();
     const activeUser = sessionData.userId !== null ? sessionData.userId : null;
     console.log("activeUser", activeUser);
-    const contactData = JSON.parse(localStorage.getItem(activeUser)) ?? [];
+    const contactData = JSON.parse(localStorage.getItem([activeUser])) ?? [];
     console.log("exportData", contactData);
+    return contactData;
   };
 
   const { CSVDownloader } = useCSVDownloader();
@@ -127,7 +130,7 @@ export default function ContactPage() {
       <AppBar position="static">
         <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
-            Hello {username} , Welcome To Contact App
+            Welcome {username} !!
           </Typography>
           <Hidden mdUp>
             <IconButton
@@ -159,24 +162,30 @@ export default function ContactPage() {
               <NavLink to="/home/viewcontact">
                 <MenuItem>View Contact</MenuItem>
               </NavLink>
-              <MenuItem>Import Contact</MenuItem>
+              <NavLink to="/home/import">
+                <MenuItem>Import Contact</MenuItem>
+              </NavLink>
               <MenuItem onClick={exportData}>Export Contact</MenuItem>
               <MenuItem onClick={logout}>Logout</MenuItem>
             </Menu>
           </Hidden>
-          <Hidden smDown>
+          <Hidden mdDown>
             <NavLink to="/home/addcontact" className="navLink">
               <Button color="inherit">Add Contact</Button>
             </NavLink>
             <NavLink to="/home/viewcontact" className="navLink">
               <Button color="inherit">View Contact</Button>
             </NavLink>
-            <Button color="inherit">Import Contact</Button>
+            <NavLink to="/home/import" className="navLink">
+              <Button color="inherit" to="/home/import">
+                Import Contact
+              </Button>
+            </NavLink>
             <CSVDownloader
               className="export-btn"
               // type={Type.Button}
               bom={true}
-              filename={"JSON-TO-CSV"}
+              filename={"EXPORTED-DATA"}
               delimiter={";"}
               data={exportData}
             >

@@ -41,9 +41,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-// function createData(Avatar, name, email, phone, protein) {
-//   return { Avatar, name, email, phone, protein };
-// }
+function createData(Avatar, name, email, phone) {
+  return { Avatar, name, email, phone };
+}
 
 // const getData = getAddContactDetails();
 // getData.forEach((element) => {
@@ -59,7 +59,7 @@ export default function ViewContact() {
   // const handleClose = () => setOpen(false);
 
   const getData = getAddContactDetails();
-  // console.log("getData", getData);
+
   const [, setRows] = React.useState(getData);
   useEffect(() => {
     setRows(getData.map((elem) => console.log("shivv", elem)));
@@ -96,7 +96,7 @@ export default function ViewContact() {
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+      <Table sx={{ minWidth: 700, mt: 3 }} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>Avatar</StyledTableCell>
@@ -108,17 +108,10 @@ export default function ViewContact() {
         </TableHead>
         <TableBody>
           {getData.map((row) => (
-            <StyledTableRow key={row.name}>
+            <StyledTableRow key={row.userId}>
               <StyledTableCell component="th" scope="row">
-                <Avatar sx={{ m: 1, width: 56, height: 56 }}>
-                  {
-                    <img
-                      src={row.Avatar}
-                      className="image-display"
-                      alt="avatar"
-                    />
-                  }
-                </Avatar>
+                {/* <Avatar alt={row.name} src={row.Avatar} /> : */}
+                <Avatar src={row.Avatar} alt={row.name[0]} />
               </StyledTableCell>
               <StyledTableCell align="right">{row.name}</StyledTableCell>
               <StyledTableCell align="right">{row.email}</StyledTableCell>

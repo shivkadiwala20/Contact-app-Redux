@@ -31,7 +31,8 @@ export function setCurrentUser(data) {
 
 export const getCurrentUser = () => {
   try {
-    const FormData = JSON.parse(sessionStorage.getItem("formData")) ?? [];
+    const FormData = JSON.parse(sessionStorage.getItem("formData"));
+    console.log("sessionData", FormData);
     return FormData;
   } catch (error) {
     throw new Error(error);
