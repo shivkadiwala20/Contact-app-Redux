@@ -31,10 +31,7 @@ export default function ContactPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const sessionData = getCurrentUser();
-    const activeUser = sessionData.userId;
-    console.log("loginv", activeUser);
-    if (!activeUser) {
+    if (!sessionStorage.getItem("activeUserId")) {
       navigate("login");
     }
   }, [navigate]);
@@ -56,7 +53,7 @@ export default function ContactPage() {
   const horizontal = "right";
 
   function logout() {
-    sessionStorage.removeItem("formData");
+    sessionStorage.removeItem("activeUserId");
     navigate("/login");
   }
 
@@ -65,7 +62,7 @@ export default function ContactPage() {
   useEffect(() => {
     const data = getCurrentUser();
     console.log("contactPage", data);
-    if (data.length > 0 || data !== null) {
+    if (data?.length > 0 || data !== null) {
       setUsername(data.email ? data.email.split("@")[0] : "");
     }
   }, []);

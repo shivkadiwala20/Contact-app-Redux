@@ -22,8 +22,8 @@ export const saveFormDataToLocalStorage = (formData) => {
 
 export function setCurrentUser(data) {
   try {
-    sessionStorage.setItem("formData", JSON.stringify(data));
-    return true;
+    return sessionStorage.setItem("activeUserId", JSON.stringify(data));
+    // return true;
   } catch (error) {
     throw new Error(error);
   }
@@ -31,7 +31,7 @@ export function setCurrentUser(data) {
 
 export const getCurrentUser = () => {
   try {
-    const FormData = JSON.parse(sessionStorage.getItem("formData"));
+    const FormData = JSON.parse(sessionStorage.getItem("activeUserId"));
     console.log("sessionData", FormData);
     return FormData;
   } catch (error) {

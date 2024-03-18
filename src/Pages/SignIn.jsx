@@ -85,11 +85,19 @@ function SignIn() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     console.log("Data from SignIn", JSON.stringify(data));
     const storedFormData = getFormDataFromLocalStorage();
+
+    const isUserExists = storedFormData.some((user) => {
+      console.warn(data.email === user.email);
+      return user.email === data.email;
+    });
+
     console.log("datauserId", data);
-    if (storedFormData.length === 0 || storedFormData == null) {
-      console.log("nottt");
+
+    // const getSessionData = getCurrentUser();
+    // console.log("getSeesionData", getSessionData);
+    if (!isUserExists) {
       setError("root", {
-        message: "User Does Not Exist",
+        message: "User Does Not Exist Please Register First",
       });
     }
     // setCurrentUser(storedFormData);
@@ -103,7 +111,9 @@ function SignIn() {
         } else {
           console.log("Credential match");
           console.log("vvv", val.userId);
-          setCurrentUser({ ...data, userId: val.userId });
+          // const sessionData = setCurrentUser({ ...data, userId: val.userId });
+          sessionStorage.setItem("activeUserId", JSON.stringify(val));
+
           setOpen(true);
           setTimeout(() => {
             navigate("/home");
@@ -149,14 +159,25 @@ function SignIn() {
       >
         <Box sx={boxstyle}>
           <Grid container>
-            <Grid item xs={12} sm={12} lg={6}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              lg={6}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <Box
                 style={{
                   backgroundImage: `url(${bg})`,
                   backgroundSize: "cover",
-                  marginTop: "140px",
-                  marginLeft: "150px",
-                  marginRight: "15px",
+                  marginTop: "18px",
+                  // marginLeft: "150px",
+                  // marginRight: "15px",
+                  marginBottom: "25px",
                   height: "200px",
                   width: "205px",
                   color: "#f5f5f5",
@@ -175,9 +196,18 @@ function SignIn() {
                 <ThemeProvider theme={darkTheme}>
                   <Container>
                     <Box height={35} />
-                    <Box sx={center}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 2,
+                      }}
+                    >
                       <Avatar
-                        sx={{ ml: "35px", mb: "4px", bgcolor: "#ffffff" }}
+                        sx={{
+                          bgcolor: "#ffffff",
+                        }}
                       >
                         <LockOutlinedIcon />
                       </Avatar>
@@ -186,7 +216,11 @@ function SignIn() {
                       </Typography>
 
                       {errors.root && (
-                        <p style={{ color: "yellow" }}>{errors.root.message}</p>
+                        <Typography
+                          sx={{ color: "Yellow", textAlign: "center" }}
+                        >
+                          {errors.root.message}
+                        </Typography>
                       )}
                     </Box>
                     <Box sx={{ mt: 2 }} />

@@ -7,13 +7,14 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useState, forwardRef } from "react";
+import { useState, forwardRef, useEffect } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import MuiAlert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
 import { Form, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+
 // import { DevTool } from "@hookform/devtools";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -21,6 +22,7 @@ import * as yup from "yup";
 import {
   saveFormDataToLocalStorage,
   getFormDataFromLocalStorage,
+  getCurrentUser,
 } from "../Storage/Storage";
 const schema = yup
   .object({
@@ -80,6 +82,24 @@ export default function SingUp() {
     return Math.floor(100000 + Math.random() * 900000);
   }
 
+  // useEffect(() => {
+  //   const isUserLoggedIn = getCurrentUser();
+  //   console.warn({ isUserLoggedIn: !!isUserLoggedIn });
+  //   if (!!isUserLoggedIn) {
+  //     navigate("home");
+  //   }
+  // }, [navigate]);
+
+  useEffect(() => {
+    const isUserLoggedIn = getCurrentUser();
+    if (!!isUserLoggedIn) {
+      navigate("/home");
+      console.warn("Page nahi dikhna chaiye");
+    } else {
+      navigate("/");
+      console.warn("Page  dikhna chaiye");
+    }
+  }, [navigate]);
   const onSubmit = (formData) => {
     console.log(formData);
 
