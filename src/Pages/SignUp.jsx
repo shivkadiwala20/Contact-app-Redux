@@ -12,11 +12,8 @@ import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import MuiAlert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
-import { Form, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
-// import { DevTool } from "@hookform/devtools";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
@@ -24,6 +21,7 @@ import {
   getFormDataFromLocalStorage,
   getCurrentUser,
 } from "../Storage/Storage";
+
 const schema = yup
   .object({
     // username: yup.string().min(3).max(10).required(),
@@ -102,9 +100,7 @@ export default function SingUp() {
   }, [navigate]);
   const onSubmit = (formData) => {
     console.log(formData);
-
     const { confirmpassword, ...formDataWithoutConfirm } = formData;
-
     saveFormDataToLocalStorage({
       ...formDataWithoutConfirm,
       userId: getUserId(),

@@ -11,11 +11,9 @@ import { useNavigate } from "react-router-dom";
 import { deleteContact, getAddContactDetails } from "../../Storage/Storage";
 import Avatar from "@mui/material/Avatar";
 import "../ContactPage/ViewContact.css";
-import { useEffect, forwardRef } from "react";
+import { forwardRef } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-// import { Box, Modal } from "@mui/material";
-// import Typography from "@mui/material/Typography";
 import Slide from "@mui/material/Slide";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
@@ -55,17 +53,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 // const rows = [];
 
 export default function ViewContact() {
-  // const [open, setOpen] = React.useState(false);
-  // const handleOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
   const vertical = "top";
   const horizontal = "right";
   const [open, setOpen] = React.useState(false);
   const getData = getAddContactDetails();
   const [, setRows] = React.useState(getData);
-  useEffect(() => {
-    setRows(getData.map((elem) => console.log("shivv", elem)));
-  }, []);
 
   const handleDelete = (userId) => {
     deleteContact(userId);
@@ -74,24 +66,6 @@ export default function ViewContact() {
   };
   const navigate = useNavigate();
   const handleEdit = (userId) => {
-    // alert("hi");
-    // editContact(userId);
-    // <Modal
-    //   open={open}
-    //   onClose={handleClose}
-    //   aria-labelledby="modal-modal-title"
-    //   aria-describedby="modal-modal-description"
-    // >
-    //   <Box sx={styled}>
-    //     <Typography id="modal-modal-title" variant="h6" component="h2">
-    //       Text in a modal
-    //     </Typography>
-    //     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-    //       Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-    //     </Typography>
-    //   </Box>
-    // </Modal>;
-
     navigate("/home/edit", {
       state: userId,
     });
@@ -121,7 +95,6 @@ export default function ViewContact() {
           Contact Deleted SuccessFully!!
         </Alert>
       </Snackbar>
-
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700, mt: 3 }} aria-label="customized table">
           <TableHead>
@@ -134,7 +107,6 @@ export default function ViewContact() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {console.warn({ getData })}
             {getData.map((row) => (
               <StyledTableRow key={row.userId}>
                 <StyledTableCell component="th" scope="row">

@@ -9,7 +9,7 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useState, forwardRef, useEffect } from "react";
+import { useState, forwardRef } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import MuiAlert from "@mui/material/Alert";
@@ -20,12 +20,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getFormDataFromLocalStorage } from "../Storage/Storage";
 import "../index.css";
-import { Link } from "react-router-dom";
 
 const schema = yup
   .object({
     password: yup.string().min(8).required(),
-
     email: yup.string().email().required(),
   })
   .required();
@@ -51,15 +49,8 @@ const boxstyle = {
   boxShadow: 24,
 };
 
-const center = {
-  position: "relative",
-  top: "50%",
-  left: "37%",
-};
-
 function SignIn() {
   const [open, setOpen] = useState(false);
-
   const vertical = "top";
   const horizontal = "right";
   const navigate = useNavigate();
@@ -80,18 +71,13 @@ function SignIn() {
 
   const onSubmit = async (data) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Data from SignIn", JSON.stringify(data));
+    // console.log("Data from SignIn", JSON.stringify(data));
     const storedFormData = getFormDataFromLocalStorage();
-
     const isUserExists = storedFormData.some((user) => {
-      console.warn(data.email === user.email);
+      // console.warn(data.email === user.email);
       return user.email === data.email;
     });
-
-    console.log("datauserId", data);
-
-    // const getSessionData = getCurrentUser();
-    // console.log("getSeesionData", getSessionData);
+    // console.log("datauserId", data);
     if (!isUserExists) {
       setError("root", {
         message: "User Does Not Exist Please Register First",
@@ -100,17 +86,16 @@ function SignIn() {
     // setCurrentUser(storedFormData);
     for (let val of storedFormData) {
       if (val.email === data.email) {
-        console.log("firstIf");
+        // console.log("firstIf");
         if (val.password !== data.password) {
           setError("root", {
             message: "Credentials Does Not Match",
           });
         } else {
-          console.log("Credential match");
-          console.log("vvv", val.userId);
+          // console.log("Credential match");
+          // console.log("vvv", val.userId);
           // const sessionData = setCurrentUser({ ...data, userId: val.userId });
           sessionStorage.setItem("activeUserId", JSON.stringify(val));
-
           setOpen(true);
           setTimeout(() => {
             navigate("/home");

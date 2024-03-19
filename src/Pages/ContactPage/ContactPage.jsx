@@ -18,7 +18,6 @@ import { useEffect } from "react";
 import { Menu, MenuItem, Hidden } from "@mui/material";
 import { useCSVDownloader } from "react-papaparse";
 import MenuIcon from "@mui/icons-material/Menu";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
 
 export default function ContactPage() {
   const Alert = forwardRef(function Alert(props, ref) {
@@ -26,7 +25,6 @@ export default function ContactPage() {
   });
 
   const navigate = useNavigate();
-
   useEffect(() => {
     if (!sessionStorage.getItem("activeUserId")) {
       navigate("login");
@@ -45,7 +43,6 @@ export default function ContactPage() {
   }
 
   const [open, setOpen] = useState(false);
-
   const vertical = "top";
   const horizontal = "right";
 
@@ -55,10 +52,9 @@ export default function ContactPage() {
   }
 
   const [username, setUsername] = useState("");
-
   useEffect(() => {
     const data = getCurrentUser();
-    console.log("contactPage", data);
+    // console.log("contactPage", data);
     if (data?.length > 0 || data !== null) {
       setUsername(data.email ? data.email.split("@")[0] : "");
     }
@@ -76,9 +72,9 @@ export default function ContactPage() {
   const exportData = () => {
     const sessionData = getCurrentUser();
     const activeUser = sessionData.userId !== null ? sessionData.userId : null;
-    console.log("activeUser", activeUser);
+    // console.log("activeUser", activeUser);
     const contactData = JSON.parse(localStorage.getItem([activeUser])) ?? [];
-    console.log("exportData", contactData);
+    // console.log("exportData", contactData);
     // setOpen(true);
     return contactData;
   };
@@ -97,7 +93,6 @@ export default function ContactPage() {
           Contact Exported Successfully !!
         </Alert>
       </Snackbar>
-
       <AppBar position="static">
         <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
@@ -187,7 +182,6 @@ export default function ContactPage() {
           ></IconButton>
         </Toolbar>
       </AppBar>
-
       <Outlet></Outlet>
     </>
   );

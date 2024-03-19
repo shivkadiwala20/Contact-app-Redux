@@ -20,7 +20,6 @@ import {
   setContactInStorage,
 } from "../../Storage/Storage";
 import { getAddContactDetails } from "../../Storage/Storage";
-
 import Slide from "@mui/material/Slide";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
@@ -31,7 +30,6 @@ const Alert = forwardRef(function Alert(props, ref) {
 });
 
 const schema = yup
-
   .object({
     name: yup.string().required("Name is required"),
     email: yup.string().email().required(),
@@ -49,27 +47,19 @@ export function EditContact() {
   const vertical = "top";
   const horizontal = "right";
   const [open, setOpen] = useState(false);
-  // const getData = getAddContactDetails();
-  // const editedData = getData.find((val) => {
-  //   console.log("EditContactData", val.userId);
-  //   return val;
-  // });
-  //   console.log("EditContactData", editedData);
   const [image, setImage] = useState("");
   const location = useLocation();
   const sessionData = getCurrentUser();
   const activeUser = sessionData.userId;
-  // console.log("activeeeUSerrrr", activeUser);
   const userId = location.state ? location.state : null;
-  console.log("Id", userId);
+  // console.log("Id", userId);
   const editedData = editContact([activeUser]);
-  console.log("updatedContactData", editedData);
+  // console.log("updatedContactData", editedData);
   const editedContact = editedData.find((val) => val.userId === userId);
 
   const {
     register,
     handleSubmit,
-
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onBlur",
@@ -103,7 +93,7 @@ export function EditContact() {
         // console.log(reader.result);
         contactData.Avatar = reader.result;
         getAddContactDetails(contactData);
-        const newData = setContactInStorage({
+        setContactInStorage({
           ...contactData,
           userId: getUserId(),
         });
@@ -120,18 +110,13 @@ export function EditContact() {
           );
           editedData[indexToUpdate] = existingData;
           setContactInStorage([activeUser], editedData);
-
-          console.log("index", editedData);
         }
         setOpen(true);
         setTimeout(() => {
           navigate("/home/viewcontact");
         }, 1000);
-        console.log(newData);
       });
       reader.readAsDataURL(image);
-      console.log("CotactData", contactData);
-
       contactData.Avatar = image;
     } else {
       if (JSON.stringify(existingData) !== JSON.stringify(contactData)) {
@@ -146,16 +131,12 @@ export function EditContact() {
         );
         editedData[indexToUpdate] = existingData;
         setContactInStorage([activeUser], editedData);
-
-        console.log("index", editedData);
       }
       setOpen(true);
       setTimeout(() => {
         navigate("/home/viewcontact");
       }, 1000);
     }
-
-    // saveAddContactDetails(contactData);
   };
 
   const handleClick = () => {
@@ -164,13 +145,7 @@ export function EditContact() {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    console.log(file);
-    setImage(event.target.files[0]);
-    // const reader = new FileReader();
-    // reader.addEventListener("load", () => {
-    //   console.log(reader.result);
-    // });
-    // reader.readAsDataURL(file);
+    setImage(file);
   };
 
   const handleClose = (event, reason) => {
@@ -197,7 +172,6 @@ export function EditContact() {
           Contact Updated SuccessFully!!
         </Alert>
       </Snackbar>
-
       <ThemeProvider theme={defaultTheme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -214,20 +188,7 @@ export function EditContact() {
               src={image ? URL.createObjectURL(image) : editedContact.Avatar}
               onClick={handleClick}
             />
-            {/* <Avatar alt="Shiv" src="/static/images/avatar/1.jpg" /> */}
-            {/* {image ? (
-              <img
-                src={URL.createObjectURL(image)} 
-                className="image-display-after "
-                alt="shiv-img"
-              />
-            ) : (
-              <img
-                src="https://cdn.iconscout.com/icon/free/png-512/free-avatar-370-456322.png?f=webp&w=256"
-                alt=""
-                className="image-display-before "
-              />
-            )} */}
+
             <input
               type="file"
               ref={inputRef}
@@ -235,7 +196,6 @@ export function EditContact() {
               accept="image/png, image/gif, image/jpeg"
               style={{ display: "none" }}
             />
-
             <Typography component="h1" variant="h5">
               Update Image
             </Typography>
@@ -273,7 +233,6 @@ export function EditContact() {
                   {errors.email?.message}
                 </span>
               )}
-
               <TextField
                 margin="normal"
                 required
