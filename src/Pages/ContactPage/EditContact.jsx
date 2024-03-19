@@ -19,7 +19,7 @@ import {
   getCurrentUser,
   setContactInStorage,
 } from "../../Storage/Storage";
-import { getAddContactDetails } from "../../Storage/Storage";
+
 import Slide from "@mui/material/Slide";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
@@ -34,12 +34,9 @@ const schema = yup
     name: yup.string().required("Name is required"),
     email: yup.string().email().required(),
     phone: yup
-      .number()
-      .typeError("That doesn't look like a phone number")
-      .positive("A phone number can't start with a minus")
-      .integer("A phone number can't include a decimal point")
-      .min(10, "Phone number must be equal to 10")
-      .required("A phone number is required"),
+      .string()
+      .required("Phone number is required")
+      .matches(/^\d{10}$/, "Please enter a valid 10 digit phone number"),
   })
   .required();
 
@@ -75,10 +72,6 @@ export function EditContact() {
   const navigate = useNavigate();
   const inputRef = useRef(null);
 
-  function getUserId() {
-    return Math.floor(100000 + Math.random() * 900000);
-  }
-
   const onSubmit = async (contactData) => {
     // console.error("chal raha  hai", image);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -92,13 +85,11 @@ export function EditContact() {
     if (image) {
       const reader = new FileReader();
       reader.addEventListener("load", () => {
-        // console.log(reader.result);
         contactData.Avatar = reader.result;
-        getAddContactDetails(contactData);
-        setContactInStorage({
-          ...contactData,
-          userId: getUserId(),
-        });
+        // setContactInStorage({
+        //   ...contactData,
+        //   userId: getUserId(),
+        // });
 
         if (JSON.stringify(existingData) !== JSON.stringify(contactData)) {
           existingData.name = contactData.name;
