@@ -22,11 +22,8 @@ const router = createBrowserRouter([
   {
     path: "/home",
     element: <ContactPage />,
+
     children: [
-      {
-        path: "",
-        element: <ViewContact />,
-      },
       {
         path: "add-contact",
         element: <AddContact />,

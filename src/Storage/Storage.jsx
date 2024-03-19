@@ -61,12 +61,12 @@ export const getAddContactDetails = () => {
   try {
     const sessionData = getCurrentUser();
     // console.log("SessionData", sessionData);
-    const userId = sessionData.userId;
+    const userId = sessionData?.userId;
     const contactData = JSON.parse(localStorage.getItem(userId)) ?? [];
     // console.log("contactData", contactData);
     return contactData;
   } catch (error) {
-    throw new Error(error);
+    console.error("Error saving data to local storage:", error);
   }
 };
 export const deleteContact = (userId) => {

@@ -47,6 +47,7 @@ export default function ViewContact() {
   const horizontal = "right";
   const [open, setOpen] = React.useState(false);
   const getData = getAddContactDetails();
+  console.log("getData", getData);
   const [, setRows] = React.useState(getData);
 
   const handleDelete = (userId) => {
@@ -86,7 +87,7 @@ export default function ViewContact() {
         </Alert>
       </Snackbar>
 
-      {getData.length === 0 ? (
+      {getData?.length === 0 ? (
         <div
           style={{
             textAlign: "center",
@@ -116,22 +117,22 @@ export default function ViewContact() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {getData.map((row) => (
-                <StyledTableRow key={row.userId}>
+              {getData?.map((row) => (
+                <StyledTableRow key={row?.userId}>
                   <StyledTableCell component="th" scope="row">
-                    <Avatar src={row.Avatar} alt={row.name[0]} />
+                    <Avatar src={row?.Avatar} alt={row?.name[0]} />
                   </StyledTableCell>
-                  <StyledTableCell align="right">{row.name}</StyledTableCell>
-                  <StyledTableCell align="right">{row.email}</StyledTableCell>
-                  <StyledTableCell align="right">{row.phone}</StyledTableCell>
+                  <StyledTableCell align="right">{row?.name}</StyledTableCell>
+                  <StyledTableCell align="right">{row?.email}</StyledTableCell>
+                  <StyledTableCell align="right">{row?.phone}</StyledTableCell>
                   <StyledTableCell align="right">
                     <EditIcon
                       sx={{ mr: 2, cursor: "pointer" }}
-                      onClick={() => handleEdit(row.userId)}
+                      onClick={() => handleEdit(row?.userId)}
                     />
                     <DeleteIcon
                       sx={{ cursor: "pointer" }}
-                      onClick={() => handleDelete(row.userId)}
+                      onClick={() => handleDelete(row?.userId)}
                     />
                   </StyledTableCell>
                 </StyledTableRow>

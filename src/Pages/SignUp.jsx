@@ -92,10 +92,6 @@ export default function SingUp() {
     const isUserLoggedIn = getCurrentUser();
     if (!!isUserLoggedIn) {
       navigate("/home");
-      // console.warn("Page nahi dikhna chaiye");
-    } else {
-      navigate("/");
-      // console.warn("Page  dikhna chaiye");
     }
   }, [navigate]);
   const onSubmit = (formData) => {

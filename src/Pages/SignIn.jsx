@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import bg from "./bg/weblogo.svg";
@@ -18,7 +18,10 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getFormDataFromLocalStorage } from "../Storage/Storage";
+import {
+  getCurrentUser,
+  getFormDataFromLocalStorage,
+} from "../Storage/Storage";
 import "../index.css";
 
 const schema = yup
@@ -54,6 +57,13 @@ function SignIn() {
   const vertical = "top";
   const horizontal = "right";
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const isUserLoggedIn = getCurrentUser();
+    if (!!isUserLoggedIn) {
+      navigate("/home/view-contact");
+    }
+  }, [navigate]);
 
   const {
     register,

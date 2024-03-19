@@ -30,9 +30,13 @@ export default function ContactPage() {
 
   const navigate = useNavigate();
   useEffect(() => {
-    const activeUser = getCurrentUser();
-    if (!activeUser) {
-      navigate("login");
+    const isUserLoggedIn = getCurrentUser();
+
+    // const activeUser = getCurrentUser();
+    if (!isUserLoggedIn) {
+      navigate("/login");
+    } else {
+      navigate("/home/view-contact");
     }
   }, [navigate]);
 
@@ -124,13 +128,13 @@ export default function ContactPage() {
               open={Boolean(anchorEl)}
               onClose={handleCloseMenu}
             >
-              <NavLink to="/home/add-contact">
+              <NavLink onClick={handleCloseMenu} to="/home/add-contact">
                 <MenuItem color="inherit">Add Contact</MenuItem>
               </NavLink>
-              <NavLink to="/home/view-contact">
+              <NavLink onClick={handleCloseMenu} to="/home/view-contact">
                 <MenuItem>View Contact</MenuItem>
               </NavLink>
-              <NavLink to="/home/import">
+              <NavLink onClick={handleCloseMenu} to="/home/import">
                 <MenuItem>Import Contact</MenuItem>
               </NavLink>
               <CSVDownloader
@@ -184,7 +188,7 @@ export default function ContactPage() {
           ></IconButton>
         </Toolbar>
       </AppBar>
-      <Outlet></Outlet>
+      <Outlet />
     </>
   );
 }

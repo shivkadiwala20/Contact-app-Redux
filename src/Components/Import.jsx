@@ -20,23 +20,25 @@ export default function Import() {
   const [open, setOpen] = useState(false);
   const handleFile = (event) => {
     Papa.parse(event.target.files[0], {
+      header: true,
+      error: (err) => console.log(err),
       complete: function (result) {
-        const data = [];
-        result.data.map((d) => {
-          return data.push({
-            name: d[2],
-            email: d[1],
-            phone: d[0],
-            Avatar: d[3],
-            userId: d[4],
-          });
-        });
-        data.shift();
+        // result.data.map((d) => {
+        //   return data.push({
+        //     name: d[2],
+        //     email: d[1],
+        //     phone: d[0],
+        //     Avatar: d[3],
+        //     userId: d[4],
+        //   });
+        // });
+        // data.shift();
         const contacts = getActiveUser([activeUser]);
-        data.map((d) => {
-          return contacts.push(d);
-        });
-        setContactInStorage([activeUser], contacts);
+        // console.log({ contacts });
+        // data.map((d) => {
+        //   return contacts.push(d);
+        // });
+        setContactInStorage([activeUser], [...result?.data, ...contacts]);
         setOpen(true);
         navigate("/home/view-contact");
       },
