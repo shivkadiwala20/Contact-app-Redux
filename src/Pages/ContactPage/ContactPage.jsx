@@ -13,7 +13,11 @@ import { useNavigate } from "react-router-dom";
 // import Stack from "@mui/material/Stack";
 // import { Navbar } from "../ContactPage/ContactNavbar";
 import "../../index.css";
-import { getCurrentUser } from "../../Storage/Storage";
+import {
+  getActiveUser,
+  getCurrentUser,
+  loggedOut,
+} from "../../Storage/Storage";
 import { useEffect } from "react";
 import { Menu, MenuItem, Hidden } from "@mui/material";
 import { useCSVDownloader } from "react-papaparse";
@@ -26,7 +30,8 @@ export default function ContactPage() {
 
   const navigate = useNavigate();
   useEffect(() => {
-    if (!sessionStorage.getItem("activeUserId")) {
+    const activeUser = getCurrentUser();
+    if (!activeUser) {
       navigate("login");
     }
   }, [navigate]);
@@ -47,7 +52,7 @@ export default function ContactPage() {
   const horizontal = "right";
 
   function logout() {
-    sessionStorage.removeItem("activeUserId");
+    loggedOut();
     navigate("/login");
   }
 
@@ -70,11 +75,8 @@ export default function ContactPage() {
   };
 
   const exportData = () => {
-    const sessionData = getCurrentUser();
-    const activeUser = sessionData.userId !== null ? sessionData.userId : null;
-    // console.log("activeUser", activeUser);
-    const contactData = JSON.parse(localStorage.getItem([activeUser])) ?? [];
-    // console.log("exportData", contactData);
+    const contactData = getActiveUser();
+    console.log("exportData", contactData);
     // setOpen(true);
     return contactData;
   };

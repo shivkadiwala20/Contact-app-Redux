@@ -15,7 +15,7 @@ import { useRef, useState, forwardRef } from "react";
 import "../ContactPage/AddContact.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  editContact,
+  getActiveUser,
   getCurrentUser,
   setContactInStorage,
 } from "../../Storage/Storage";
@@ -51,7 +51,7 @@ export function EditContact() {
   const activeUser = sessionData.userId;
   const userId = location.state ? location.state : null;
   // console.log("Id", userId);
-  const editedData = editContact([activeUser]);
+  const editedData = getActiveUser([activeUser]);
   // console.log("updatedContactData", editedData);
   const editedContact = editedData.find((val) => val.userId === userId);
 
@@ -97,7 +97,7 @@ export function EditContact() {
           existingData.email = contactData.email;
           existingData.Avatar = contactData.Avatar;
           existingData.userId = editedContact.userId;
-          const editedData = editContact([activeUser]);
+          const editedData = getActiveUser([activeUser]);
           const indexToUpdate = editedData.findIndex(
             (obj) => obj.userId === editedContact.userId
           );
@@ -120,7 +120,7 @@ export function EditContact() {
         existingData.email = contactData.email;
         existingData.Avatar = editedContact.Avatar;
         existingData.userId = editedContact.userId;
-        const editedData = editContact([activeUser]);
+        const editedData = getActiveUser([activeUser]);
         const indexToUpdate = editedData.findIndex(
           (obj) => obj.userId === editedContact.userId
         );

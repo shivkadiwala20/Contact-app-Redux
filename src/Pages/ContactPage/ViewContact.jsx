@@ -17,7 +17,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Slide from "@mui/material/Slide";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-
+import Button from "@mui/material/Button";
+import ContactsIcon from "@mui/icons-material/Contacts";
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -40,17 +41,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-
-// function createData(Avatar, name, email, phone) {
-//   return { Avatar, name, email, phone };
-// }
-// const getData = getAddContactDetails();
-// getData.forEach((element) => {
-//   console.log("elem", element.Avatar);
-//   createData(element.Avatar);
-// });
-
-// const rows = [];
 
 export default function ViewContact() {
   const vertical = "top";
@@ -95,42 +85,61 @@ export default function ViewContact() {
           Contact Deleted SuccessFully!!
         </Alert>
       </Snackbar>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700, mt: 3 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Avatar</StyledTableCell>
-              <StyledTableCell align="right">Name</StyledTableCell>
-              <StyledTableCell align="right">Email</StyledTableCell>
-              <StyledTableCell align="right">Phone Number</StyledTableCell>
-              <StyledTableCell align="right">Action&nbsp;</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {getData.map((row) => (
-              <StyledTableRow key={row.userId}>
-                <StyledTableCell component="th" scope="row">
-                  {/* <Avatar alt={row.name} src={row.Avatar} /> : */}
-                  <Avatar src={row.Avatar} alt={row.name[0]} />
-                </StyledTableCell>
-                <StyledTableCell align="right">{row.name}</StyledTableCell>
-                <StyledTableCell align="right">{row.email}</StyledTableCell>
-                <StyledTableCell align="right">{row.phone}</StyledTableCell>
-                <StyledTableCell align="right">
-                  <EditIcon
-                    sx={{ mr: 2, cursor: "pointer" }}
-                    onClick={() => handleEdit(row.userId)}
-                  />
-                  <DeleteIcon
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => handleDelete(row.userId)}
-                  />
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
+      {getData.length === 0 ? (
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "200px",
+            // border: "2px solid",
+          }}
+        >
+          <h1>No contacts found, Please add contacts.</h1>
+          <Button
+            variant="contained"
+            onClick={() => navigate("/home/add-contact")}
+          >
+            <ContactsIcon sx={{ mr: 2 }} />
+            Add Contact
+          </Button>
+        </div>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700, mt: 3 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Avatar</StyledTableCell>
+                <StyledTableCell align="right">Name</StyledTableCell>
+                <StyledTableCell align="right">Email</StyledTableCell>
+                <StyledTableCell align="right">Phone Number</StyledTableCell>
+                <StyledTableCell align="right">Action&nbsp;</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {getData.map((row) => (
+                <StyledTableRow key={row.userId}>
+                  <StyledTableCell component="th" scope="row">
+                    <Avatar src={row.Avatar} alt={row.name[0]} />
+                  </StyledTableCell>
+                  <StyledTableCell align="right">{row.name}</StyledTableCell>
+                  <StyledTableCell align="right">{row.email}</StyledTableCell>
+                  <StyledTableCell align="right">{row.phone}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    <EditIcon
+                      sx={{ mr: 2, cursor: "pointer" }}
+                      onClick={() => handleEdit(row.userId)}
+                    />
+                    <DeleteIcon
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => handleDelete(row.userId)}
+                    />
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </>
   );
 }

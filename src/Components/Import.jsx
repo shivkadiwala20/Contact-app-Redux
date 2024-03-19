@@ -2,7 +2,7 @@ import React, { useState, forwardRef } from "react";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../Storage/Storage";
-import { editContact, setContactInStorage } from "../Storage/Storage";
+import { getActiveUser, setContactInStorage } from "../Storage/Storage";
 import Slide from "@mui/material/Slide";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
@@ -32,7 +32,7 @@ export default function Import() {
           });
         });
         data.shift();
-        const contacts = editContact([activeUser]);
+        const contacts = getActiveUser([activeUser]);
         data.map((d) => {
           return contacts.push(d);
         });
@@ -67,10 +67,18 @@ export default function Import() {
           Contact Imported SuccessFully!!
         </Alert>
       </Snackbar>
-      <div className="App">
-        <h3>
+      <div
+        className="App"
+        style={{
+          textAlign: "center",
+          marginTop: "200px",
+          // border: "2px solid",
+        }}
+      >
+        <h1>
           Please upload the <span className="csv">.CSV</span> file to import
-        </h3>
+          Contacts
+        </h1>
         <input
           type="file"
           name="file"
