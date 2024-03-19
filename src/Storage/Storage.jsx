@@ -1,17 +1,14 @@
-import React from "react";
-
 export const saveFormDataToLocalStorage = (formData) => {
   try {
     const existingData = getFormDataFromLocalStorage() || [];
     const updatedData = [...existingData, formData];
-    console.log("Existing Data", existingData);
+    // console.log("Existing Data", existingData);
     // const newData = Object.keys(formData)
     //   .filter((objKey) => objKey !== "confirmpassword")
     //   .reduce((newObj, key) => {
     //     newObj[key] = formData[key];
     //     return newObj;
     //   }, {});
-
     // console.log("formDataKey", newData);
     localStorage.setItem("formData", JSON.stringify(updatedData));
     return true;
@@ -32,7 +29,7 @@ export function setCurrentUser(data) {
 export const getCurrentUser = () => {
   try {
     const FormData = JSON.parse(sessionStorage.getItem("activeUserId"));
-    console.log("sessionData", FormData);
+    // console.log("sessionData", FormData);
     return FormData;
   } catch (error) {
     throw new Error(error);
@@ -47,7 +44,7 @@ export const getFormDataFromLocalStorage = () => {
     // }
     // return JSON.parse(FormData);
     const FormData = JSON.parse(localStorage.getItem("formData")) ?? [];
-    console.log(FormData);
+    // console.log(FormData);
     return FormData;
   } catch (error) {
     console.error("Error retrieving data from local storage:", error);
@@ -73,7 +70,7 @@ export const saveAddContactDetails = (contactData) => {
   // console.log("userId", userId);
 
   const avaiLableData = getAddContactDetails() || [];
-  console.log(contactData);
+  // console.log(contactData);
   if (avaiLableData !== null) {
     const arr = JSON.parse(localStorage.getItem([userId])) || [];
     arr.push(contactData);
@@ -88,11 +85,10 @@ export const saveAddContactDetails = (contactData) => {
 export const getAddContactDetails = () => {
   try {
     const sessionData = getCurrentUser();
-    console.log("SessionData", sessionData);
+    // console.log("SessionData", sessionData);
     const userId = sessionData.userId;
     const contactData = JSON.parse(localStorage.getItem(userId)) ?? [];
-
-    console.log("contactData", contactData);
+    // console.log("contactData", contactData);
     return contactData;
   } catch (error) {
     throw new Error(error);
@@ -125,7 +121,7 @@ export const deleteContact = (userId) => {
 export const editContact = (userId) => {
   const sessionData = getCurrentUser();
   const activeUser = sessionData.userId;
-  console.log("activeUser", activeUser);
+  // console.log("activeUser", activeUser);
   return JSON.parse(localStorage.getItem(activeUser)) ?? [];
   // console.log("contactData", contactData);
   // const updatedContactData = contactData.find((val) => val.userId === userId);

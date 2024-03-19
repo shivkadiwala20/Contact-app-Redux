@@ -28,11 +28,11 @@ const router = createBrowserRouter([
         element: <AddContact />,
       },
       {
-        path: "addcontact",
+        path: "add-contact",
         element: <AddContact />,
       },
       {
-        path: "viewcontact",
+        path: "view-contact",
         element: <ViewContact />,
       },
       {

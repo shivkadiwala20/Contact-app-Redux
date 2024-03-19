@@ -48,6 +48,7 @@ export function EditContact() {
   const horizontal = "right";
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState("");
+  // console.warn({ image });
   const location = useLocation();
   const sessionData = getCurrentUser();
   const activeUser = sessionData.userId;
@@ -79,6 +80,7 @@ export function EditContact() {
   }
 
   const onSubmit = async (contactData) => {
+    // console.error("chal raha  hai", image);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const existingData = Object.keys(editedContact)
       .filter((objKey) => objKey !== "userId")
@@ -86,7 +88,7 @@ export function EditContact() {
         newObj[key] = editedContact[key];
         return newObj;
       }, {});
-
+    // console.log("UpdatedData", contactData);
     if (image) {
       const reader = new FileReader();
       reader.addEventListener("load", () => {
@@ -113,17 +115,19 @@ export function EditContact() {
         }
         setOpen(true);
         setTimeout(() => {
-          navigate("/home/viewcontact");
+          navigate("/home/view-contact");
         }, 1000);
       });
+      // console.log("UpdatedData", contactData);
       reader.readAsDataURL(image);
       contactData.Avatar = image;
+      // console.warn("chal raha  hai", image);
     } else {
       if (JSON.stringify(existingData) !== JSON.stringify(contactData)) {
         existingData.name = contactData.name;
         existingData.phone = contactData.phone;
         existingData.email = contactData.email;
-        existingData.Avatar = contactData.Avatar;
+        existingData.Avatar = editedContact.Avatar;
         existingData.userId = editedContact.userId;
         const editedData = editContact([activeUser]);
         const indexToUpdate = editedData.findIndex(
@@ -134,9 +138,10 @@ export function EditContact() {
       }
       setOpen(true);
       setTimeout(() => {
-        navigate("/home/viewcontact");
+        navigate("/home/view-contact");
       }, 1000);
     }
+    // console.log("UpdatedData", contactData);
   };
 
   const handleClick = () => {

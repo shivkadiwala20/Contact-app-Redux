@@ -26,7 +26,7 @@ const schema = yup
   .object({
     // username: yup.string().min(3).max(10).required(),
     password: yup.string().min(8).required(),
-    confirmpassword: yup
+    confirmPassword: yup
       .string()
       .label("confirm password")
       .required()
@@ -92,22 +92,22 @@ export default function SingUp() {
     const isUserLoggedIn = getCurrentUser();
     if (!!isUserLoggedIn) {
       navigate("/home");
-      console.warn("Page nahi dikhna chaiye");
+      // console.warn("Page nahi dikhna chaiye");
     } else {
       navigate("/");
-      console.warn("Page  dikhna chaiye");
+      // console.warn("Page  dikhna chaiye");
     }
   }, [navigate]);
   const onSubmit = (formData) => {
-    console.log(formData);
-    const { confirmpassword, ...formDataWithoutConfirm } = formData;
+    // console.log(formData);
+    const { confirmPassword, ...formDataWithoutConfirm } = formData;
     saveFormDataToLocalStorage({
       ...formDataWithoutConfirm,
       userId: getUserId(),
     });
 
-    const storedFormData = getFormDataFromLocalStorage();
-    console.log("Stored Form Data:", storedFormData);
+    getFormDataFromLocalStorage();
+    // console.log("Stored Form Data:", storedFormData);
 
     setOpen(true);
     setTimeout(() => {
@@ -229,20 +229,18 @@ export default function SingUp() {
                         <Grid item xs={6}>
                           <TextField
                             fullWidth
-                            {...register("confirmpassword")}
-                            name="confirmpassword"
+                            {...register("confirmPassword")}
+                            name="confirmPassword"
                             label="Confirm Password"
                             type="password"
                             size="small"
-                            id="confirmpassword"
+                            id="confirmPassword"
                             autoComplete="new-password"
                           />
-
                           <span style={{ color: "yellow", fontSize: "18px" }}>
-                            {errors.confirmpassword?.message}
+                            {errors.confirmPassword?.message}
                           </span>
                         </Grid>
-
                         <Grid item xs={12} sx={{ ml: "5em", mr: "5em" }}>
                           <Button
                             type="submit"

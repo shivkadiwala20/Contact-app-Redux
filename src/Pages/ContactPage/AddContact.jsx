@@ -30,12 +30,9 @@ const schema = yup
     name: yup.string().required("Name is required"),
     email: yup.string().email().required(),
     phone: yup
-      .number()
-      .typeError("That doesn't look like a phone number")
-      .positive("A phone number can't start with a minus")
-      .integer("A phone number can't include a decimal point")
-      .min(10, "Phone number must be equal to 10")
-      .required("A phone number is required"),
+      .string()
+      .required("Phone number is required")
+      .matches(/^\d{10}$/, "Please enter a valid 10 digit phone number"),
   })
   .required();
 
@@ -82,7 +79,7 @@ export function AddContact() {
       contactData.Avatar = image;
       setOpen(true);
       setTimeout(() => {
-        navigate("/home/viewcontact");
+        navigate("/home/view-contact");
       }, 1000);
     } else {
       contactData.Avatar = " ";
@@ -93,7 +90,7 @@ export function AddContact() {
       });
       setOpen(true);
       setTimeout(() => {
-        navigate("/home/viewcontact");
+        navigate("/home/view-contact");
       }, 1000);
     }
   };
@@ -197,14 +194,20 @@ export function AddContact() {
               )}
 
               <TextField
+                {...register("phone", {
+                  required: "requried",
+                  pattern: {
+                    value: /^\d{10}$/,
+                    message: "please enter valid pohone",
+                  },
+                })}
                 margin="normal"
                 required
                 fullWidth
                 name="phone"
                 label="Phone Number"
-                type="tel"
+                // type="tel"
                 id="phone"
-                {...register("phone")}
               />
               {errors.phone && (
                 <span style={{ color: "red", fontSize: "12px" }}>

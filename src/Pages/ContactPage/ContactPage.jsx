@@ -122,10 +122,10 @@ export default function ContactPage() {
               open={Boolean(anchorEl)}
               onClose={handleCloseMenu}
             >
-              <NavLink to="/home/addcontact">
+              <NavLink to="/home/add-contact">
                 <MenuItem color="inherit">Add Contact</MenuItem>
               </NavLink>
-              <NavLink to="/home/viewcontact">
+              <NavLink to="/home/view-contact">
                 <MenuItem>View Contact</MenuItem>
               </NavLink>
               <NavLink to="/home/import">
@@ -145,10 +145,10 @@ export default function ContactPage() {
             </Menu>
           </Hidden>
           <Hidden mdDown>
-            <NavLink to="/home/addcontact" className="navLink">
+            <NavLink to="/home/add-contact" className="navLink">
               <Button color="inherit">Add Contact</Button>
             </NavLink>
-            <NavLink to="/home/viewcontact" className="navLink">
+            <NavLink to="/home/view-contact" className="navLink">
               <Button color="inherit">View Contact</Button>
             </NavLink>
             <NavLink to="/home/import" className="navLink">
