@@ -1,11 +1,10 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
@@ -14,14 +13,12 @@ import { useNavigate } from "react-router-dom";
 // import Stack from "@mui/material/Stack";
 // import { Navbar } from "../ContactPage/ContactNavbar";
 import "../../index.css";
-// import "../ContactPage/navbar.css";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { Navbar } from "./ContactNavbar";
 import { getCurrentUser } from "../../Storage/Storage";
 import { useEffect } from "react";
 import { Menu, MenuItem, Hidden } from "@mui/material";
 import { useCSVDownloader } from "react-papaparse";
 import MenuIcon from "@mui/icons-material/Menu";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 
 export default function ContactPage() {
   const Alert = forwardRef(function Alert(props, ref) {
@@ -82,6 +79,7 @@ export default function ContactPage() {
     console.log("activeUser", activeUser);
     const contactData = JSON.parse(localStorage.getItem([activeUser])) ?? [];
     console.log("exportData", contactData);
+    // setOpen(true);
     return contactData;
   };
 
@@ -96,33 +94,9 @@ export default function ContactPage() {
         anchorOrigin={{ vertical, horizontal }}
       >
         <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          You have successfully logged in!
+          Contact Exported Successfully !!
         </Alert>
       </Snackbar>
-
-      {/* <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            ></IconButton>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Hello {username} , Welcome To Contact App
-            </Typography>
-            <Button color="inherit" onClick={logout}>
-              LogOut
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </Box> */}
-      {/* <Stack spacing={2} direction="row" className="buttons">
-        <Button variant="contained">Add Contact</Button>
-      </Stack> */}
-      {/* <Navbar /> */}
 
       <AppBar position="static">
         <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
@@ -162,7 +136,16 @@ export default function ContactPage() {
               <NavLink to="/home/import">
                 <MenuItem>Import Contact</MenuItem>
               </NavLink>
-              <MenuItem onClick={exportData}>Export Contact</MenuItem>
+              <CSVDownloader
+                className="export-btn"
+                // type={Type.Button}
+                bom={true}
+                filename={"EXPORTED-DATA"}
+                delimiter={";"}
+                data={exportData}
+              >
+                <MenuItem onClick={exportData}>Export Contact</MenuItem>
+              </CSVDownloader>
               <MenuItem onClick={logout}>Logout</MenuItem>
             </Menu>
           </Hidden>
@@ -174,9 +157,7 @@ export default function ContactPage() {
               <Button color="inherit">View Contact</Button>
             </NavLink>
             <NavLink to="/home/import" className="navLink">
-              <Button color="inherit" to="/home/import">
-                Import Contact
-              </Button>
+              <Button color="inherit">Import Contact</Button>
             </NavLink>
             <CSVDownloader
               className="export-btn"
@@ -186,6 +167,7 @@ export default function ContactPage() {
               delimiter={";"}
               data={exportData}
             >
+              {/* <FileUploadIcon sx={{}} /> */}
               <Button color="inherit" onClick={exportData}>
                 Export Contact
               </Button>

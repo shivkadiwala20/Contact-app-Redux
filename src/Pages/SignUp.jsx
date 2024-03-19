@@ -153,18 +153,28 @@ export default function SingUp() {
       >
         <Box sx={boxstyle}>
           <Grid container>
-            <Grid item xs={12} sm={12} lg={6}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              lg={6}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <Box
                 style={{
                   backgroundImage: `url(${bg})`,
                   backgroundSize: "cover",
-                  marginTop: "140px",
-                  marginLeft: "150px",
-                  marginRight: "15px",
+                  marginTop: "18px",
+                  marginBottom: "25px",
                   height: "200px",
                   width: "205px",
                   color: "#f5f5f5",
                 }}
+                className="logo"
               ></Box>
             </Grid>
             <Grid item xs={12} sm={12} lg={6}>
@@ -251,6 +261,7 @@ export default function SingUp() {
                               minWidth: "170px",
                               backgroundColor: "rgb(76,82,86)",
                             }}
+                            className="submit-btn"
                           >
                             Register
                           </Button>

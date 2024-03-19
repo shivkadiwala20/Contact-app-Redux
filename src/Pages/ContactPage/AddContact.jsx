@@ -21,13 +21,11 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 const defaultTheme = createTheme();
-
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 const schema = yup
-
   .object({
     name: yup.string().required("Name is required"),
     email: yup.string().email().required(),
@@ -48,7 +46,6 @@ export function AddContact() {
   const {
     register,
     handleSubmit,
-
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onBlur",
@@ -76,16 +73,12 @@ export function AddContact() {
         // console.log(reader.result);
         contactData.Avatar = reader.result;
         getAddContactDetails(contactData);
-        const newData = saveAddContactDetails({
+        saveAddContactDetails({
           ...contactData,
           userId: getUserId(),
         });
-
-        console.log(newData);
       });
       reader.readAsDataURL(image);
-      console.log("CotactData", contactData);
-
       contactData.Avatar = image;
       setOpen(true);
       setTimeout(() => {
@@ -94,7 +87,7 @@ export function AddContact() {
     } else {
       contactData.Avatar = " ";
       getAddContactDetails(contactData);
-      const newData = saveAddContactDetails({
+      saveAddContactDetails({
         ...contactData,
         userId: getUserId(),
       });
@@ -103,8 +96,6 @@ export function AddContact() {
         navigate("/home/viewcontact");
       }, 1000);
     }
-
-    // saveAddContactDetails(contactData);
   };
 
   const handleClick = () => {
@@ -113,13 +104,7 @@ export function AddContact() {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    console.log(file);
-    setImage(event.target.files[0]);
-    // const reader = new FileReader();
-    // reader.addEventListener("load", () => {
-    //   console.log(reader.result);
-    // });
-    // reader.readAsDataURL(file);
+    setImage(file);
   };
 
   const handleClose = (event, reason) => {
@@ -166,20 +151,6 @@ export function AddContact() {
                   : require("../bg/456322.webp")
               }
             />
-            {/* <Avatar alt="Shiv" src="/static/images/avatar/1.jpg" /> */}
-            {/* {image ? (
-              <img
-                src={URL.createObjectURL(image)}
-                className="image-display-after "
-                alt="shiv-img"
-              />
-            ) : (
-              <img
-                src="https://cdn.iconscout.com/icon/free/png-512/free-avatar-370-456322.png?f=webp&w=256"
-                alt=""
-                className="image-display-before "
-              />
-            )} */}
             <input
               type="file"
               ref={inputRef}
@@ -187,7 +158,6 @@ export function AddContact() {
               accept="image/png, image/gif, image/jpeg"
               style={{ display: "none" }}
             />
-
             <Typography component="h1" variant="h5">
               Upload Image
             </Typography>

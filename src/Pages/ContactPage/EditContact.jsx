@@ -11,17 +11,24 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useRef, useState } from "react";
+import { useRef, useState, forwardRef } from "react";
 import "../ContactPage/AddContact.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   editContact,
   getCurrentUser,
-  saveAddContactDetails,
   setContactInStorage,
 } from "../../Storage/Storage";
 import { getAddContactDetails } from "../../Storage/Storage";
+
+import Slide from "@mui/material/Slide";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
 const defaultTheme = createTheme();
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const schema = yup
 
@@ -39,6 +46,9 @@ const schema = yup
   .required();
 
 export function EditContact() {
+  const vertical = "top";
+  const horizontal = "right";
+  const [open, setOpen] = useState(false);
   // const getData = getAddContactDetails();
   // const editedData = getData.find((val) => {
   //   console.log("EditContactData", val.userId);
@@ -60,7 +70,7 @@ export function EditContact() {
     register,
     handleSubmit,
 
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     mode: "onBlur",
     resolver: yupResolver(schema),
@@ -78,7 +88,8 @@ export function EditContact() {
     return Math.floor(100000 + Math.random() * 900000);
   }
 
-  const onSubmit = (contactData) => {
+  const onSubmit = async (contactData) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const existingData = Object.keys(editedContact)
       .filter((objKey) => objKey !== "userId")
       .reduce((newObj, key) => {
@@ -99,7 +110,7 @@ export function EditContact() {
 
         if (JSON.stringify(existingData) !== JSON.stringify(contactData)) {
           existingData.name = contactData.name;
-          existingData.number = contactData.number;
+          existingData.phone = contactData.phone;
           existingData.email = contactData.email;
           existingData.Avatar = contactData.Avatar;
           existingData.userId = editedContact.userId;
@@ -112,8 +123,10 @@ export function EditContact() {
 
           console.log("index", editedData);
         }
-
-        navigate("/home/viewcontact");
+        setOpen(true);
+        setTimeout(() => {
+          navigate("/home/viewcontact");
+        }, 1000);
         console.log(newData);
       });
       reader.readAsDataURL(image);
@@ -123,7 +136,7 @@ export function EditContact() {
     } else {
       if (JSON.stringify(existingData) !== JSON.stringify(contactData)) {
         existingData.name = contactData.name;
-        existingData.number = contactData.number;
+        existingData.phone = contactData.phone;
         existingData.email = contactData.email;
         existingData.Avatar = contactData.Avatar;
         existingData.userId = editedContact.userId;
@@ -136,8 +149,10 @@ export function EditContact() {
 
         console.log("index", editedData);
       }
-
-      navigate("/home/viewcontact");
+      setOpen(true);
+      setTimeout(() => {
+        navigate("/home/viewcontact");
+      }, 1000);
     }
 
     // saveAddContactDetails(contactData);
@@ -158,25 +173,49 @@ export function EditContact() {
     // reader.readAsDataURL(file);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  function TransitionLeft(props) {
+    return <Slide {...props} direction="left" />;
+  }
+
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar
-            sx={{ m: 1, width: 86, height: 86 }}
-            src={image ? URL.createObjectURL(image) : editedContact.Avatar}
-            onClick={handleClick}
-          />
-          {/* <Avatar alt="Shiv" src="/static/images/avatar/1.jpg" /> */}
-          {/* {image ? (
+    <>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        TransitionComponent={TransitionLeft}
+        anchorOrigin={{ vertical, horizontal }}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Contact Updated SuccessFully!!
+        </Alert>
+      </Snackbar>
+
+      <ThemeProvider theme={defaultTheme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 8,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar
+              sx={{ m: 1, width: 86, height: 86 }}
+              src={image ? URL.createObjectURL(image) : editedContact.Avatar}
+              onClick={handleClick}
+            />
+            {/* <Avatar alt="Shiv" src="/static/images/avatar/1.jpg" /> */}
+            {/* {image ? (
               <img
                 src={URL.createObjectURL(image)} 
                 className="image-display-after "
@@ -189,78 +228,80 @@ export function EditContact() {
                 className="image-display-before "
               />
             )} */}
-          <input
-            type="file"
-            ref={inputRef}
-            onChange={handleImageChange}
-            accept="image/png, image/gif, image/jpeg"
-            style={{ display: "none" }}
-          />
+            <input
+              type="file"
+              ref={inputRef}
+              onChange={handleImageChange}
+              accept="image/png, image/gif, image/jpeg"
+              style={{ display: "none" }}
+            />
 
-          <Typography component="h1" variant="h5">
-            Update Image
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Name"
-              name="name"
-              autoComplete="name"
-              {...register("name")}
-            />
-            {errors.name && (
-              <span style={{ color: "red", fontSize: "12px" }}>
-                {errors.name?.message}
-              </span>
-            )}
-            <TextField
-              fullWidth
-              id="email"
-              label="Email"
-              type="email"
-              name="email"
-              {...register("email")}
-            />
-            {errors.email && (
-              <span style={{ color: "red", fontSize: "12px" }}>
-                {errors.email?.message}
-              </span>
-            )}
-
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="phone"
-              label="Phone Number"
-              type="tel"
-              id="phone"
-              {...register("phone")}
-            />
-            {errors.phone && (
-              <span style={{ color: "red", fontSize: "12px" }}>
-                {errors.phone?.message}
-              </span>
-            )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+            <Typography component="h1" variant="h5">
+              Update Image
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
+              sx={{ mt: 1 }}
             >
-              Update Contact
-            </Button>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="name"
+                label="Name"
+                name="name"
+                autoComplete="name"
+                {...register("name")}
+              />
+              {errors.name && (
+                <span style={{ color: "red", fontSize: "12px" }}>
+                  {errors.name?.message}
+                </span>
+              )}
+              <TextField
+                fullWidth
+                id="email"
+                label="Email"
+                type="email"
+                name="email"
+                {...register("email")}
+              />
+              {errors.email && (
+                <span style={{ color: "red", fontSize: "12px" }}>
+                  {errors.email?.message}
+                </span>
+              )}
+
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="phone"
+                label="Phone Number"
+                type="tel"
+                id="phone"
+                {...register("phone")}
+              />
+              {errors.phone && (
+                <span style={{ color: "red", fontSize: "12px" }}>
+                  {errors.phone?.message}
+                </span>
+              )}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Updating Contact...." : "UPDATE CONTACT"}
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+        </Container>
+      </ThemeProvider>
+    </>
   );
 }

@@ -7,8 +7,7 @@ import ContactPage from "./Pages/ContactPage/ContactPage";
 import { AddContact } from "./Pages/ContactPage/AddContact";
 import ViewContact from "./Pages/ContactPage/ViewContact";
 import { EditContact } from "./Pages/ContactPage/EditContact";
-import Welcome from "./Components/Welcome";
-import Protected from "./Components/Protected";
+
 import Import from "./Components/Import";
 
 const router = createBrowserRouter([
@@ -26,7 +25,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Welcome />,
+        element: <AddContact />,
       },
       {
         path: "addcontact",

@@ -16,5 +16,24 @@ code {
   color: white;
 }
 .active {
-  color: red;
+  color: yellow;
+}
+
+@media only screen and (max-width: 1200px) {
+  .logo {
+    height: 101px !important;
+    width: 104px !important;
+    /* display: none; */
+  }
+  .submit-btn {
+    /* border: 2px solid yellow !important; */
+    margin-left: -20px !important;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .submit-btn {
+    /* border: 2px solid yellow !important; */
+    /* margin-left: -20px !important; */
+    margin-left: 59px;
+  }
 }

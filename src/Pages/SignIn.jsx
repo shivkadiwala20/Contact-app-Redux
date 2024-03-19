@@ -18,11 +18,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  getCurrentUser,
-  getFormDataFromLocalStorage,
-  setCurrentUser,
-} from "../Storage/Storage";
+import { getFormDataFromLocalStorage } from "../Storage/Storage";
+import "../index.css";
 import { Link } from "react-router-dom";
 
 const schema = yup
@@ -169,6 +166,7 @@ function SignIn() {
                 justifyContent: "center",
                 alignItems: "center",
               }}
+              className="logo-container"
             >
               <Box
                 style={{
@@ -182,6 +180,7 @@ function SignIn() {
                   width: "205px",
                   color: "#f5f5f5",
                 }}
+                className="logo"
               ></Box>
             </Grid>
             <Grid item xs={12} sm={12} lg={6}>
@@ -270,11 +269,13 @@ function SignIn() {
                               mt: "10px",
                               mr: "20px",
                               borderRadius: 28,
+
                               color: "#ffffff",
                               minWidth: "170px",
                               backgroundColor: "rgb(76,82,86)",
-                              disabled: { isSubmitting },
                             }}
+                            disabled={isSubmitting}
+                            className="submit-btn"
                           >
                             {isSubmitting ? "SIGN IN...." : "SIGN IN"}
                           </Button>
