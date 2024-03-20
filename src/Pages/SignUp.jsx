@@ -7,11 +7,11 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useState, forwardRef, useEffect } from "react";
-import Snackbar from "@mui/material/Snackbar";
+import { useEffect } from "react";
+// import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
-import MuiAlert from "@mui/material/Alert";
-import Slide from "@mui/material/Slide";
+// import MuiAlert from "@mui/material/Alert";
+// import Slide from "@mui/material/Slide";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -35,9 +35,9 @@ const schema = yup
   })
   .required();
 
-const Alert = forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+// const Alert = forwardRef(function Alert(props, ref) {
+//   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+// });
 
 const darkTheme = createTheme({
   palette: {
@@ -63,14 +63,14 @@ const center = {
 };
 
 export default function SingUp() {
-  const [open, setOpen] = useState(false);
-  const vertical = "top";
-  const horizontal = "right";
+  // const [open, setOpen] = useState(false);
+  // const vertical = "top";
+  // const horizontal = "right";
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     mode: "onBlur",
     resolver: yupResolver(schema),
@@ -91,11 +91,12 @@ export default function SingUp() {
   useEffect(() => {
     const isUserLoggedIn = getCurrentUser();
     if (!!isUserLoggedIn) {
-      navigate("/home");
+      navigate("/contacts");
     }
   }, [navigate]);
-  const onSubmit = (formData) => {
+  const onSubmit = async (formData) => {
     // console.log(formData);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const { confirmPassword, ...formDataWithoutConfirm } = formData;
     saveFormDataToLocalStorage({
       ...formDataWithoutConfirm,
@@ -105,26 +106,26 @@ export default function SingUp() {
     getFormDataFromLocalStorage();
     // console.log("Stored Form Data:", storedFormData);
 
-    setOpen(true);
+    // setOpen(true);
     setTimeout(() => {
-      navigate("/login");
+      navigate("/");
     }, 1000);
   };
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
+  // const handleClose = (event, reason) => {
+  //   if (reason === "clickaway") {
+  //     return;
+  //   }
+  //   setOpen(false);
+  // };
 
-  function TransitionLeft(props) {
-    return <Slide {...props} direction="left" />;
-  }
+  // function TransitionLeft(props) {
+  //   return <Slide {...props} direction="left" />;
+  // }
 
   return (
     <>
-      <Snackbar
+      {/* <Snackbar
         open={open}
         autoHideDuration={4000}
         onClose={handleClose}
@@ -134,7 +135,7 @@ export default function SingUp() {
         <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
           User Registered Successfully !!
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
       <div
         style={{
           // backgroundImage: `url(${bgimg})`,
@@ -251,9 +252,10 @@ export default function SingUp() {
                               minWidth: "170px",
                               backgroundColor: "rgb(76,82,86)",
                             }}
+                            disabled={isSubmitting}
                             className="submit-btn"
                           >
-                            Register
+                            {isSubmitting ? "Registering...." : "Register"}
                           </Button>
                         </Grid>
                         <Grid item xs={12}>
@@ -263,14 +265,14 @@ export default function SingUp() {
                               component="span"
                               style={{ marginTop: "10px" }}
                             >
-                              Already have an Account?{" "}
+                              Already have an account?{" "}
                               <span
                                 style={{
                                   color: "rgb(76,82,86)",
                                   cursor: "pointer",
                                 }}
                                 onClick={() => {
-                                  navigate("/login");
+                                  navigate("/");
                                 }}
                               >
                                 Sign In

@@ -34,9 +34,9 @@ export default function ContactPage() {
 
     // const activeUser = getCurrentUser();
     if (!isUserLoggedIn) {
-      navigate("/login");
+      navigate("/");
     } else {
-      navigate("/home/view-contact");
+      navigate("/contacts/view-contact");
     }
   }, [navigate]);
 
@@ -57,7 +57,7 @@ export default function ContactPage() {
 
   function logout() {
     loggedOut();
-    navigate("/login");
+    navigate("/");
   }
 
   const [username, setUsername] = useState("");
@@ -128,13 +128,13 @@ export default function ContactPage() {
               open={Boolean(anchorEl)}
               onClose={handleCloseMenu}
             >
-              <NavLink onClick={handleCloseMenu} to="/home/add-contact">
+              <NavLink onClick={handleCloseMenu} to="/contacts/add-contact">
                 <MenuItem color="inherit">Add Contact</MenuItem>
               </NavLink>
-              <NavLink onClick={handleCloseMenu} to="/home/view-contact">
+              <NavLink onClick={handleCloseMenu} to="/contacts/view-contact">
                 <MenuItem>View Contact</MenuItem>
               </NavLink>
-              <NavLink onClick={handleCloseMenu} to="/home/import">
+              <NavLink onClick={handleCloseMenu} to="/contacts/import">
                 <MenuItem>Import Contact</MenuItem>
               </NavLink>
               <CSVDownloader
@@ -151,13 +151,13 @@ export default function ContactPage() {
             </Menu>
           </Hidden>
           <Hidden mdDown>
-            <NavLink to="/home/add-contact" className="navLink">
+            <NavLink to="/contacts/add-contact" className="navLink">
               <Button color="inherit">Add Contact</Button>
             </NavLink>
-            <NavLink to="/home/view-contact" className="navLink">
+            <NavLink to="/contacts/view-contact" className="navLink">
               <Button color="inherit">View Contact</Button>
             </NavLink>
-            <NavLink to="/home/import" className="navLink">
+            <NavLink to="/contacts/import" className="navLink">
               <Button color="inherit">Import Contact</Button>
             </NavLink>
             <CSVDownloader

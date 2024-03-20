@@ -73,14 +73,14 @@ export const deleteContact = (userId) => {
   const sessionData = getCurrentUser();
   const user = sessionData.userId;
   const contactData = JSON.parse(localStorage.getItem(user)) ?? [];
-  const updatedData = contactData.filter((val) => val.userId !== userId);
+  const updatedData = contactData.filter((val) => val?.userId !== userId);
   localStorage.setItem(user, JSON.stringify(updatedData));
   return true;
 };
 
 export const getActiveUser = (userId) => {
   const sessionData = getCurrentUser();
-  const activeUser = sessionData.userId;
+  const activeUser = sessionData?.userId;
   return JSON.parse(localStorage.getItem(activeUser)) ?? [];
 };
 

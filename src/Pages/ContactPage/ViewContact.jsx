@@ -46,20 +46,20 @@ export default function ViewContact() {
   const vertical = "top";
   const horizontal = "right";
   const [open, setOpen] = React.useState(false);
-  const getData = getAddContactDetails();
-  console.log("getData", getData);
-  const [, setRows] = React.useState(getData);
+  const [rows, setRows] = React.useState(getAddContactDetails());
 
   const handleDelete = (userId) => {
     deleteContact(userId);
     setRows(getAddContactDetails());
     setOpen(true);
   };
+
+  // const { userId } = useParams();
+  // console.log("userId", userId);
+
   const navigate = useNavigate();
   const handleEdit = (userId) => {
-    navigate("/home/edit", {
-      state: userId,
-    });
+    navigate(`/contacts/edit/${userId}`);
   };
 
   const handleClose = (event, reason) => {
@@ -87,7 +87,7 @@ export default function ViewContact() {
         </Alert>
       </Snackbar>
 
-      {getData?.length === 0 ? (
+      {rows?.length === 0 ? (
         <div
           style={{
             textAlign: "center",
@@ -98,7 +98,7 @@ export default function ViewContact() {
           <h1>No contacts found, Please add contacts.</h1>
           <Button
             variant="contained"
-            onClick={() => navigate("/home/add-contact")}
+            onClick={() => navigate("/contacts/add-contact")}
           >
             <ContactsIcon sx={{ mr: 2 }} />
             Add Contact
@@ -117,10 +117,10 @@ export default function ViewContact() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {getData?.map((row) => (
+              {rows?.map((row) => (
                 <StyledTableRow key={row?.userId}>
                   <StyledTableCell component="th" scope="row">
-                    <Avatar src={row?.Avatar} alt={row?.name[0]} />
+                    <Avatar src={row?.avatar} alt={row?.name[0]} />
                   </StyledTableCell>
                   <StyledTableCell align="right">{row?.name}</StyledTableCell>
                   <StyledTableCell align="right">{row?.email}</StyledTableCell>

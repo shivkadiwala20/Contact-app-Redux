@@ -28,7 +28,7 @@ const Alert = forwardRef(function Alert(props, ref) {
 const schema = yup
   .object({
     name: yup.string().required("Name is required"),
-    email: yup.string().email().required(),
+    email: yup.string().email().required("Email is required "),
     phone: yup
       .string()
       .required("Phone number is required")
@@ -68,7 +68,7 @@ export function AddContact() {
       const reader = new FileReader();
       reader.addEventListener("load", () => {
         // console.log(reader.result);
-        contactData.Avatar = reader.result;
+        contactData.avatar = reader.result;
         getAddContactDetails(contactData);
         saveAddContactDetails({
           ...contactData,
@@ -76,13 +76,13 @@ export function AddContact() {
         });
       });
       reader.readAsDataURL(image);
-      contactData.Avatar = image;
+      contactData.avatar = image;
       setOpen(true);
       setTimeout(() => {
-        navigate("/home/view-contact");
+        navigate("/contacts/view-contact");
       }, 1000);
     } else {
-      contactData.Avatar = " ";
+      contactData.avatar = " ";
       getAddContactDetails(contactData);
       saveAddContactDetails({
         ...contactData,
@@ -90,7 +90,7 @@ export function AddContact() {
       });
       setOpen(true);
       setTimeout(() => {
-        navigate("/home/view-contact");
+        navigate("/contacts/view-contact");
       }, 1000);
     }
   };
@@ -142,11 +142,8 @@ export function AddContact() {
             <Avatar
               sx={{ m: 1, width: 86, height: 86 }}
               onClick={handleClick}
-              src={
-                image
-                  ? URL.createObjectURL(image)
-                  : require("../bg/456322.webp")
-              }
+              style={{ cursor: "pointer" }}
+              src={image ? URL.createObjectURL(image) : ""}
             />
             <input
               type="file"
@@ -175,7 +172,13 @@ export function AddContact() {
                 {...register("name")}
               />
               {errors.name && (
-                <span style={{ color: "red", fontSize: "12px" }}>
+                <span
+                  style={{
+                    color: "red",
+                    fontSize: "14px",
+                    paddingBottom: "15px",
+                  }}
+                >
                   {errors.name?.message}
                 </span>
               )}
@@ -185,10 +188,20 @@ export function AddContact() {
                 label="Email"
                 type="email"
                 name="email"
+                required
                 {...register("email")}
+                className="email"
               />
+              <br />
               {errors.email && (
-                <span style={{ color: "red", fontSize: "12px" }}>
+                <span
+                  style={{
+                    color: "red",
+                    fontSize: "14px",
+                    // backgroundColor: "red",
+                  }}
+                  className="error-message"
+                >
                   {errors.email?.message}
                 </span>
               )}
@@ -196,10 +209,6 @@ export function AddContact() {
               <TextField
                 {...register("phone", {
                   required: "requried",
-                  pattern: {
-                    value: /^\d{10}$/,
-                    message: "please enter valid pohone",
-                  },
                 })}
                 margin="normal"
                 required
@@ -210,7 +219,7 @@ export function AddContact() {
                 id="phone"
               />
               {errors.phone && (
-                <span style={{ color: "red", fontSize: "12px" }}>
+                <span style={{ color: "red", fontSize: "14px" }}>
                   {errors.phone?.message}
                 </span>
               )}

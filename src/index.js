@@ -13,14 +13,14 @@ import Import from "./Components/Import";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <SingUp />,
-  },
-  {
-    path: "/login",
     element: <SignIn />,
   },
   {
-    path: "/home",
+    path: "/sign-up",
+    element: <SingUp />,
+  },
+  {
+    path: "/contacts",
     element: <ContactPage />,
 
     children: [
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
         element: <Import />,
       },
       {
-        path: "edit",
+        path: "edit/:userId",
         element: <EditContact />,
       },
     ],

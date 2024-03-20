@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRef, useState, forwardRef } from "react";
 import "../ContactPage/AddContact.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getActiveUser,
   getCurrentUser,
@@ -32,7 +32,7 @@ const Alert = forwardRef(function Alert(props, ref) {
 const schema = yup
   .object({
     name: yup.string().required("Name is required"),
-    email: yup.string().email().required(),
+    email: yup.string().email().required("Email is required"),
     phone: yup
       .string()
       .required("Phone number is required")
@@ -46,14 +46,17 @@ export function EditContact() {
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState("");
   // console.warn({ image });
-  const location = useLocation();
+  // const location = useLocation();
   const sessionData = getCurrentUser();
-  const activeUser = sessionData.userId;
-  const userId = location.state ? location.state : null;
-  // console.log("Id", userId);
+  const activeUser = sessionData?.userId;
+  // const userId = location.state ? location.state : null;
+  const { userId } = useParams();
+  // console.log("userId", userId);
+  const rowId = Number(userId);
   const editedData = getActiveUser([activeUser]);
   // console.log("updatedContactData", editedData);
-  const editedContact = editedData.find((val) => val.userId === userId);
+  const editedContact = editedData.find((val) => val.userId === rowId);
+  console.log(editedContact);
 
   const {
     register,
@@ -85,7 +88,7 @@ export function EditContact() {
     if (image) {
       const reader = new FileReader();
       reader.addEventListener("load", () => {
-        contactData.Avatar = reader.result;
+        contactData.avatar = reader.result;
         // setContactInStorage({
         //   ...contactData,
         //   userId: getUserId(),
@@ -95,7 +98,7 @@ export function EditContact() {
           existingData.name = contactData.name;
           existingData.phone = contactData.phone;
           existingData.email = contactData.email;
-          existingData.Avatar = contactData.Avatar;
+          existingData.avatar = contactData.avatar;
           existingData.userId = editedContact.userId;
           const editedData = getActiveUser([activeUser]);
           const indexToUpdate = editedData.findIndex(
@@ -106,19 +109,19 @@ export function EditContact() {
         }
         setOpen(true);
         setTimeout(() => {
-          navigate("/home/view-contact");
+          navigate("/contacts/view-contact");
         }, 1000);
       });
       // console.log("UpdatedData", contactData);
       reader.readAsDataURL(image);
-      contactData.Avatar = image;
+      contactData.avatar = image;
       // console.warn("chal raha  hai", image);
     } else {
       if (JSON.stringify(existingData) !== JSON.stringify(contactData)) {
         existingData.name = contactData.name;
         existingData.phone = contactData.phone;
         existingData.email = contactData.email;
-        existingData.Avatar = editedContact.Avatar;
+        existingData.avatar = editedContact.avatar;
         existingData.userId = editedContact.userId;
         const editedData = getActiveUser([activeUser]);
         const indexToUpdate = editedData.findIndex(
@@ -129,7 +132,7 @@ export function EditContact() {
       }
       setOpen(true);
       setTimeout(() => {
-        navigate("/home/view-contact");
+        navigate("/contacts/view-contact");
       }, 1000);
     }
     // console.log("UpdatedData", contactData);
@@ -181,7 +184,7 @@ export function EditContact() {
           >
             <Avatar
               sx={{ m: 1, width: 86, height: 86 }}
-              src={image ? URL.createObjectURL(image) : editedContact.Avatar}
+              src={image ? URL.createObjectURL(image) : editedContact.avatar}
               onClick={handleClick}
             />
 
@@ -212,7 +215,7 @@ export function EditContact() {
                 {...register("name")}
               />
               {errors.name && (
-                <span style={{ color: "red", fontSize: "12px" }}>
+                <span style={{ color: "red", fontSize: "14px" }}>
                   {errors.name?.message}
                 </span>
               )}
@@ -222,10 +225,12 @@ export function EditContact() {
                 label="Email"
                 type="email"
                 name="email"
+                required
                 {...register("email")}
+                className="email"
               />
               {errors.email && (
-                <span style={{ color: "red", fontSize: "12px" }}>
+                <span style={{ color: "red", fontSize: "14px" }}>
                   {errors.email?.message}
                 </span>
               )}
@@ -240,7 +245,7 @@ export function EditContact() {
                 {...register("phone")}
               />
               {errors.phone && (
-                <span style={{ color: "red", fontSize: "12px" }}>
+                <span style={{ color: "red", fontSize: "14px" }}>
                   {errors.phone?.message}
                 </span>
               )}

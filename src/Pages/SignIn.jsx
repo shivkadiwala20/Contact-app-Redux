@@ -61,7 +61,7 @@ function SignIn() {
   useEffect(() => {
     const isUserLoggedIn = getCurrentUser();
     if (!!isUserLoggedIn) {
-      navigate("/home/view-contact");
+      navigate("/contacts/view-contact");
     }
   }, [navigate]);
 
@@ -108,7 +108,7 @@ function SignIn() {
           sessionStorage.setItem("activeUserId", JSON.stringify(val));
           setOpen(true);
           setTimeout(() => {
-            navigate("/home");
+            navigate("/contacts");
           }, 1000);
           break;
         }
@@ -289,7 +289,7 @@ function SignIn() {
                                   cursor: "pointer",
                                 }}
                                 onClick={() => {
-                                  navigate("/");
+                                  navigate("/sign-up");
                                 }}
                               >
                                 Create an Account

@@ -23,24 +23,10 @@ export default function Import() {
       header: true,
       error: (err) => console.log(err),
       complete: function (result) {
-        // result.data.map((d) => {
-        //   return data.push({
-        //     name: d[2],
-        //     email: d[1],
-        //     phone: d[0],
-        //     Avatar: d[3],
-        //     userId: d[4],
-        //   });
-        // });
-        // data.shift();
         const contacts = getActiveUser([activeUser]);
-        // console.log({ contacts });
-        // data.map((d) => {
-        //   return contacts.push(d);
-        // });
         setContactInStorage([activeUser], [...result?.data, ...contacts]);
         setOpen(true);
-        navigate("/home/view-contact");
+        navigate("/contacts/view-contact");
       },
     });
   };
