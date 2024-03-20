@@ -19,6 +19,12 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import ContactsIcon from "@mui/icons-material/Contacts";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -46,12 +52,24 @@ export default function ViewContact() {
   const vertical = "top";
   const horizontal = "right";
   const [open, setOpen] = React.useState(false);
+  const [openDialog, setOpenDialog] = React.useState(false);
   const [rows, setRows] = React.useState(getAddContactDetails());
 
-  const handleDelete = (userId) => {
-    deleteContact(userId);
+  const handleDialogOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
     setRows(getAddContactDetails());
     setOpen(true);
+  };
+  const handleDialogCloseCancel = () => {
+    setOpenDialog(false);
+  };
+  const handleDelete = (userId) => {
+    deleteContact(userId);
+    setOpenDialog(true);
   };
 
   // const { userId } = useParams();
@@ -75,6 +93,26 @@ export default function ViewContact() {
 
   return (
     <>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Delete Contact</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this contact?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogCloseCancel} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDialogClose} color="primary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Snackbar
         open={open}
         autoHideDuration={3000}
@@ -86,7 +124,6 @@ export default function ViewContact() {
           Contact Deleted SuccessFully!!
         </Alert>
       </Snackbar>
-
       {rows?.length === 0 ? (
         <div
           style={{
@@ -132,7 +169,10 @@ export default function ViewContact() {
                     />
                     <DeleteIcon
                       sx={{ cursor: "pointer" }}
-                      onClick={() => handleDelete(row?.userId)}
+                      onClick={() => {
+                        handleDelete(row?.userId);
+                        handleDialogOpen();
+                      }}
                     />
                   </StyledTableCell>
                 </StyledTableRow>
@@ -141,6 +181,7 @@ export default function ViewContact() {
           </Table>
         </TableContainer>
       )}
+      ;
     </>
   );
 }

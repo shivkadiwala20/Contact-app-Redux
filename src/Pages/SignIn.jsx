@@ -231,7 +231,7 @@ function SignIn() {
                             {...register("email")}
                           />
                           {errors.email && (
-                            <span style={{ color: "yellow", fontSize: "18px" }}>
+                            <span style={{ color: "yellow", fontSize: "14px" }}>
                               {errors.email?.message}
                             </span>
                           )}
@@ -248,7 +248,7 @@ function SignIn() {
                             autoComplete="new-password"
                           />
                           {errors.password && (
-                            <span style={{ color: "yellow", fontSize: "18px" }}>
+                            <span style={{ color: "yellow", fontSize: "14px" }}>
                               {errors.password?.message}
                             </span>
                           )}
@@ -292,7 +292,7 @@ function SignIn() {
                                   navigate("/sign-up");
                                 }}
                               >
-                                Create an Account
+                                Create an account
                               </span>
                             </Typography>
                           </Stack>

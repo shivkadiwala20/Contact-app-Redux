@@ -30,7 +30,7 @@ const schema = yup
       .string()
       .label("confirm password")
       .required()
-      .oneOf([yup.ref("password"), null], "Passwords must match"),
+      .oneOf([yup.ref("password"), null], "password must match"),
     email: yup.string().email().required(),
   })
   .required();
@@ -201,7 +201,7 @@ export default function SingUp() {
                             {...register("email")}
                           />
                           {errors.email && (
-                            <span style={{ color: "yellow", fontSize: "18px" }}>
+                            <span style={{ color: "yellow", fontSize: "14px" }}>
                               {errors.email?.message}
                             </span>
                           )}
@@ -218,7 +218,7 @@ export default function SingUp() {
                             autoComplete="new-password"
                           />
                           {errors.password && (
-                            <span style={{ color: "yellow", fontSize: "18px" }}>
+                            <span style={{ color: "yellow", fontSize: "14px" }}>
                               {errors.password?.message}
                             </span>
                           )}
@@ -234,7 +234,7 @@ export default function SingUp() {
                             id="confirmPassword"
                             autoComplete="new-password"
                           />
-                          <span style={{ color: "yellow", fontSize: "18px" }}>
+                          <span style={{ color: "yellow", fontSize: "14px" }}>
                             {errors.confirmPassword?.message}
                           </span>
                         </Grid>
