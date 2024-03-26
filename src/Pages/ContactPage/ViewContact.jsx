@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router-dom";
-import { deleteContact, getAddContactDetails } from "../../Storage/Storage";
+// import { deleteContact } from "../../Storage/Storage";
 import Avatar from "@mui/material/Avatar";
 import "../ContactPage/ViewContact.css";
 import { forwardRef } from "react";
@@ -24,6 +24,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteContacts } from "../../Action/Action";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -49,11 +51,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function ViewContact() {
+  const dispatch = useDispatch();
   const vertical = "top";
   const horizontal = "right";
   const [open, setOpen] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [rows, setRows] = React.useState(getAddContactDetails());
+  // const [rows, setRows] = React.useState(getAddContactDetails());
+
+  const rows = useSelector((state) => state.contacts);
+  console.log("rowss", rows);
 
   const handleDialogOpen = () => {
     setOpenDialog(true);
@@ -61,14 +67,14 @@ export default function ViewContact() {
 
   const handleDialogClose = () => {
     setOpenDialog(false);
-    setRows(getAddContactDetails());
+    // setRows(getAddContactDetails());
     setOpen(true);
   };
   const handleDialogCloseCancel = () => {
     setOpenDialog(false);
   };
   const handleDelete = (userId) => {
-    deleteContact(userId);
+    dispatch(deleteContacts(userId));
     setOpenDialog(true);
   };
 
