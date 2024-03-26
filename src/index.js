@@ -6,7 +6,10 @@ import { Provider } from "react-redux";
 import { contactReducer } from "../src/Reducers/Reducer";
 import AppRouting from "./AppRouting";
 
-const store = createStore(contactReducer);
+const store = createStore(
+  contactReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

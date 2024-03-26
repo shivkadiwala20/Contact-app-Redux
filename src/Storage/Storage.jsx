@@ -45,7 +45,7 @@ export const saveAddContactDetails = (contactData) => {
   // console.log("userId", userId);
 
   const avaiLableData = getAddContactDetails() || [];
-  // console.log(contactData);
+  console.log("avaiLableData", avaiLableData);
   if (avaiLableData !== null) {
     const arr = JSON.parse(localStorage.getItem([userId])) || [];
     arr.push(contactData);
@@ -63,7 +63,7 @@ export const getAddContactDetails = () => {
     // console.log("SessionData", sessionData);
     const userId = sessionData?.userId;
     const contactData = JSON.parse(localStorage.getItem(userId)) ?? [];
-    // console.log("contactData", contactData);
+    console.log("getContactData", contactData);
     return contactData;
   } catch (error) {
     console.error("Error saving data to local storage:", error);
@@ -77,6 +77,13 @@ export const deleteContact = (userId) => {
   localStorage.setItem(user, JSON.stringify(updatedData));
   return true;
 };
+
+// export const saveAddContactDetails = (contactData) => {
+//   const sessionData = getCurrentUser();
+//   const userId = sessionData.userId;
+//   console.log("StorageData", contactData);
+//   return localStorage.setItem(userId, JSON.stringify(contactData));
+// };
 
 export const getActiveUser = (userId) => {
   const sessionData = getCurrentUser();

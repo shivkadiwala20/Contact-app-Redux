@@ -10,7 +10,12 @@ import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useCSVDownloader } from "react-papaparse";
 import { useState } from "react";
-import { getActiveUser, getCurrentUser, loggedOut } from "../Storage/Storage";
+import {
+  getActiveUser,
+  getCurrentUser,
+  loggedOut,
+  saveAddContactDetails,
+} from "../Storage/Storage";
 
 const exportData = () => {
   const contactData = getActiveUser();

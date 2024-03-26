@@ -16,6 +16,7 @@ import { addContact } from "../../Action/Action";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getAddContactDetails } from "../../Storage/Storage";
 
 const defaultTheme = createTheme();
 
@@ -55,12 +56,15 @@ export function AddContact() {
       const reader = new FileReader();
       reader.addEventListener("load", () => {
         contactData.avatar = reader.result;
-        dispatch(
-          addContact({
-            ...contactData,
-            userId: getUserId(),
-          })
-        );
+        console.log("AddDaa", contactData);
+        contactData.userId = getUserId();
+        dispatch(addContact(contactData));
+        // dispatch(
+        //   addContact({
+        //     ...contactData,
+        //     userId: getUserId(),
+        //   })
+        // );
       });
       reader.readAsDataURL(image);
       toast("Contact Added Successfully !!");
@@ -69,12 +73,9 @@ export function AddContact() {
       }, 1000);
     } else {
       contactData.avatar = " ";
-      dispatch(
-        addContact({
-          ...contactData,
-          userId: getUserId(),
-        })
-      );
+      contactData.userId = getUserId();
+      console.log("AddDaa", contactData);
+      dispatch(addContact(contactData));
       toast.success("Contact Added Successfully!", {
         position: "top-center",
         autoClose: 8000,
