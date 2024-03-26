@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 // import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 // import MuiAlert from "@mui/material/Alert";
@@ -63,10 +63,17 @@ const center = {
 };
 
 export default function SingUp() {
+  const navigate = useNavigate();
+  useLayoutEffect(() => {
+    const isUserLoggedIn = getCurrentUser();
+    if (!!isUserLoggedIn) {
+      navigate("/contacts");
+    }
+  }, [navigate]);
   // const [open, setOpen] = useState(false);
   // const vertical = "top";
   // const horizontal = "right";
-  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -88,12 +95,6 @@ export default function SingUp() {
   //   }
   // }, [navigate]);
 
-  useEffect(() => {
-    const isUserLoggedIn = getCurrentUser();
-    if (!!isUserLoggedIn) {
-      navigate("/contacts");
-    }
-  }, [navigate]);
   const onSubmit = async (formData) => {
     // console.log(formData);
     await new Promise((resolve) => setTimeout(resolve, 1000));
