@@ -5,25 +5,19 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import * as yup from "yup";
 import Box from "@mui/material/Box";
-// import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useRef, useState, forwardRef } from "react";
-import "../ContactPage/AddContact.css";
+import { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../Action/Action";
 import { useNavigate } from "react-router-dom";
-import { saveAddContactDetails } from "../../Storage/Storage";
-import { getAddContactDetails } from "../../Storage/Storage";
-import Slide from "@mui/material/Slide";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const defaultTheme = createTheme();
-const Alert = forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 const schema = yup
   .object({
@@ -37,9 +31,10 @@ const schema = yup
   .required();
 
 export function AddContact() {
-  const vertical = "top";
-  const horizontal = "right";
-  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const inputRef = useRef(null);
+  const [image, setImage] = useState("");
   const {
     register,
     handleSubmit,
@@ -49,49 +44,50 @@ export function AddContact() {
     resolver: yupResolver(schema),
   });
 
-  const navigate = useNavigate();
-  const inputRef = useRef(null);
-  const [image, setImage] = useState("");
-
   function getUserId() {
     return Math.floor(100000 + Math.random() * 900000);
   }
 
   const onSubmit = async (contactData) => {
-    // console.log(contactData);
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    // const sessionData = getCurrentUser();
-    // console.log("SessionData", sessionData.userId);
-    // saveAddContactDetails(contactData);
 
     if (image) {
       const reader = new FileReader();
       reader.addEventListener("load", () => {
-        // console.log(reader.result);
         contactData.avatar = reader.result;
-        getAddContactDetails(contactData);
-        saveAddContactDetails({
-          ...contactData,
-          userId: getUserId(),
-        });
+        dispatch(
+          addContact({
+            ...contactData,
+            userId: getUserId(),
+          })
+        );
       });
       reader.readAsDataURL(image);
-      contactData.avatar = image;
-      setOpen(true);
+      toast("Contact Added Successfully !!");
       setTimeout(() => {
         navigate("/contacts/view-contact");
       }, 1000);
     } else {
       contactData.avatar = " ";
-      getAddContactDetails(contactData);
-      saveAddContactDetails({
-        ...contactData,
-        userId: getUserId(),
+      dispatch(
+        addContact({
+          ...contactData,
+          userId: getUserId(),
+        })
+      );
+      toast.success("Contact Added Successfully!", {
+        position: "top-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
       });
-      setOpen(true);
       setTimeout(() => {
         navigate("/contacts/view-contact");
-      }, 1000);
+      }, 1500);
     }
   };
 
@@ -104,30 +100,8 @@ export function AddContact() {
     setImage(file);
   };
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
-
-  function TransitionLeft(props) {
-    return <Slide {...props} direction="left" />;
-  }
-
   return (
     <>
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        TransitionComponent={TransitionLeft}
-        anchorOrigin={{ vertical, horizontal }}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Contact Added SuccessFully!!
-        </Alert>
-      </Snackbar>
       <ThemeProvider theme={defaultTheme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -236,6 +210,7 @@ export function AddContact() {
           </Box>
         </Container>
       </ThemeProvider>
+      <ToastContainer />
     </>
   );
 }

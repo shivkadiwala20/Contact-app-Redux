@@ -1,74 +1,28 @@
-import * as React from "react";
+import React, { useEffect } from "react";
+import { Menu, MenuItem, Hidden } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { NavLink, Outlet } from "react-router-dom";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-import Slide from "@mui/material/Slide";
-import { useState, forwardRef } from "react";
+import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-// import Stack from "@mui/material/Stack";
-// import { Navbar } from "../ContactPage/ContactNavbar";
-import "../../index.css";
-import {
-  getActiveUser,
-  getCurrentUser,
-  loggedOut,
-} from "../../Storage/Storage";
-import { useEffect } from "react";
-import { Menu, MenuItem, Hidden } from "@mui/material";
 import { useCSVDownloader } from "react-papaparse";
-import MenuIcon from "@mui/icons-material/Menu";
+import { useState } from "react";
+import { getActiveUser, getCurrentUser, loggedOut } from "../Storage/Storage";
 
-export default function ContactPage() {
-  const Alert = forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
+const exportData = () => {
+  const contactData = getActiveUser();
+  console.log("exportData", contactData);
+  // setOpen(true);
+  return contactData;
+};
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    const isUserLoggedIn = getCurrentUser();
-
-    // const activeUser = getCurrentUser();
-    if (!isUserLoggedIn) {
-      navigate("/");
-    } else {
-      navigate("/contacts/view-contact");
-    }
-  }, [navigate]);
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(true);
-  };
-
-  function TransitionLeft(props) {
-    return <Slide {...props} direction="left" />;
-  }
-
-  const [open, setOpen] = useState(false);
-  const vertical = "top";
-  const horizontal = "right";
-
-  function logout() {
-    loggedOut();
-    navigate("/");
-  }
-
-  const [username, setUsername] = useState("");
-  useEffect(() => {
-    const data = getCurrentUser();
-    // console.log("contactPage", data);
-    if (data?.length > 0 || data !== null) {
-      setUsername(data.email ? data.email.split("@")[0] : "");
-    }
-  }, []);
+export function NavBar() {
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const { CSVDownloader } = useCSVDownloader();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -78,27 +32,24 @@ export default function ContactPage() {
     setAnchorEl(null);
   };
 
-  const exportData = () => {
-    const contactData = getActiveUser();
-    console.log("exportData", contactData);
-    // setOpen(true);
-    return contactData;
-  };
+  const [username, setUsername] = useState("");
 
-  const { CSVDownloader } = useCSVDownloader();
+  const navigate = useNavigate();
+  function logout() {
+    loggedOut();
+    navigate("/");
+  }
+
+  useEffect(() => {
+    const data = getCurrentUser();
+    // console.log("Home", data);
+    if (data?.length > 0 || data !== null) {
+      setUsername(data.email ? data.email.split("@")[0] : "");
+    }
+  }, []);
+
   return (
     <>
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        TransitionComponent={TransitionLeft}
-        anchorOrigin={{ vertical, horizontal }}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Contact Exported Successfully !!
-        </Alert>
-      </Snackbar>
       <AppBar position="static">
         <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
@@ -188,7 +139,6 @@ export default function ContactPage() {
           ></IconButton>
         </Toolbar>
       </AppBar>
-      <Outlet />
     </>
   );
 }
