@@ -1,26 +1,26 @@
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import bg from "./bg/weblogo.svg";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import bg from './bg/weblogo.svg';
 // import bgimg from "./bg/backimg.jpg";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useLayoutEffect } from "react";
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useLayoutEffect } from 'react';
 // import Snackbar from "@mui/material/Snackbar";
-import Stack from "@mui/material/Stack";
+import Stack from '@mui/material/Stack';
 // import MuiAlert from "@mui/material/Alert";
 // import Slide from "@mui/material/Slide";
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import {
   saveFormDataToLocalStorage,
   getFormDataFromLocalStorage,
   getCurrentUser,
-} from "../Storage/Storage";
+} from '../storage/Storage';
 
 const schema = yup
   .object({
@@ -28,9 +28,9 @@ const schema = yup
     password: yup.string().min(8).required(),
     confirmPassword: yup
       .string()
-      .label("confirm password")
+      .label('confirm password')
       .required()
-      .oneOf([yup.ref("password"), null], "password must match"),
+      .oneOf([yup.ref('password'), null], 'password must match'),
     email: yup.string().email().required(),
   })
   .required();
@@ -41,25 +41,25 @@ const schema = yup
 
 const darkTheme = createTheme({
   palette: {
-    mode: "dark",
+    mode: 'dark',
   },
 });
 
 const boxstyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "75%",
-  height: "70%",
-  bgcolor: "background.paper",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '75%',
+  height: '70%',
+  bgcolor: 'background.paper',
   boxShadow: 24,
 };
 
 const center = {
-  position: "relative",
-  top: "50%",
-  left: "30%",
+  position: 'relative',
+  top: '50%',
+  left: '30%',
 };
 
 export default function SingUp() {
@@ -67,7 +67,7 @@ export default function SingUp() {
   useLayoutEffect(() => {
     const isUserLoggedIn = getCurrentUser();
     if (!!isUserLoggedIn) {
-      navigate("/contacts");
+      navigate('/contacts');
     }
   }, [navigate]);
   // const [open, setOpen] = useState(false);
@@ -79,7 +79,7 @@ export default function SingUp() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    mode: "onBlur",
+    mode: 'onBlur',
     resolver: yupResolver(schema),
   });
 
@@ -109,7 +109,7 @@ export default function SingUp() {
 
     // setOpen(true);
     setTimeout(() => {
-      navigate("/");
+      navigate('/');
     }, 1000);
   };
 
@@ -140,9 +140,9 @@ export default function SingUp() {
       <div
         style={{
           // backgroundImage: `url(${bgimg})`,
-          backgroundSize: "cover",
-          height: "100vh",
-          color: "#f5f5f5",
+          backgroundSize: 'cover',
+          height: '100vh',
+          color: '#f5f5f5',
         }}
       >
         <Box sx={boxstyle}>
@@ -153,20 +153,20 @@ export default function SingUp() {
               sm={12}
               lg={6}
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
               <Box
                 style={{
                   backgroundImage: `url(${bg})`,
-                  backgroundSize: "cover",
-                  marginTop: "18px",
-                  marginBottom: "25px",
-                  height: "200px",
-                  width: "205px",
-                  color: "#f5f5f5",
+                  backgroundSize: 'cover',
+                  marginTop: '18px',
+                  marginBottom: '25px',
+                  height: '200px',
+                  width: '205px',
+                  color: '#f5f5f5',
                 }}
                 className="logo"
               ></Box>
@@ -174,10 +174,10 @@ export default function SingUp() {
             <Grid item xs={12} sm={12} lg={6}>
               <Box
                 style={{
-                  backgroundSize: "cover",
-                  height: "70vh",
-                  minHeight: "500px",
-                  backgroundColor: "rgb(33,170,233)",
+                  backgroundSize: 'cover',
+                  height: '70vh',
+                  minHeight: '500px',
+                  backgroundColor: 'rgb(33,170,233)',
                 }}
               >
                 <ThemeProvider theme={darkTheme}>
@@ -199,17 +199,17 @@ export default function SingUp() {
                             type="email"
                             name="email"
                             size="small"
-                            {...register("email")}
+                            {...register('email')}
                           />
                           {errors.email && (
-                            <span style={{ color: "yellow", fontSize: "14px" }}>
+                            <span style={{ color: 'yellow', fontSize: '14px' }}>
                               {errors.email?.message}
                             </span>
                           )}
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
-                            {...register("password")}
+                            {...register('password')}
                             fullWidth
                             name="password"
                             label="Password"
@@ -219,7 +219,7 @@ export default function SingUp() {
                             autoComplete="new-password"
                           />
                           {errors.password && (
-                            <span style={{ color: "yellow", fontSize: "14px" }}>
+                            <span style={{ color: 'yellow', fontSize: '14px' }}>
                               {errors.password?.message}
                             </span>
                           )}
@@ -227,7 +227,7 @@ export default function SingUp() {
                         <Grid item xs={6}>
                           <TextField
                             fullWidth
-                            {...register("confirmPassword")}
+                            {...register('confirmPassword')}
                             name="confirmPassword"
                             label="Confirm Password"
                             type="password"
@@ -235,28 +235,28 @@ export default function SingUp() {
                             id="confirmPassword"
                             autoComplete="new-password"
                           />
-                          <span style={{ color: "yellow", fontSize: "14px" }}>
+                          <span style={{ color: 'yellow', fontSize: '14px' }}>
                             {errors.confirmPassword?.message}
                           </span>
                         </Grid>
-                        <Grid item xs={12} sx={{ ml: "5em", mr: "5em" }}>
+                        <Grid item xs={12} sx={{ ml: '5em', mr: '5em' }}>
                           <Button
                             type="submit"
                             variant="contained"
                             fullWidth="true"
                             size="large"
                             sx={{
-                              mt: "15px",
-                              mr: "20px",
+                              mt: '15px',
+                              mr: '20px',
                               borderRadius: 28,
-                              color: "#ffffff",
-                              minWidth: "170px",
-                              backgroundColor: "rgb(76,82,86)",
+                              color: '#ffffff',
+                              minWidth: '170px',
+                              backgroundColor: 'rgb(76,82,86)',
                             }}
                             disabled={isSubmitting}
                             className="submit-btn"
                           >
-                            {isSubmitting ? "Registering...." : "Register"}
+                            {isSubmitting ? 'Registering....' : 'Register'}
                           </Button>
                         </Grid>
                         <Grid item xs={12}>
@@ -264,16 +264,16 @@ export default function SingUp() {
                             <Typography
                               variant="body1"
                               component="span"
-                              style={{ marginTop: "10px" }}
+                              style={{ marginTop: '10px' }}
                             >
-                              Already have an account?{" "}
+                              Already have an account?{' '}
                               <span
                                 style={{
-                                  color: "rgb(76,82,86)",
-                                  cursor: "pointer",
+                                  color: 'rgb(76,82,86)',
+                                  cursor: 'pointer',
                                 }}
                                 onClick={() => {
-                                  navigate("/");
+                                  navigate('/');
                                 }}
                               >
                                 Sign In

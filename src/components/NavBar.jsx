@@ -1,32 +1,26 @@
-import React, { useEffect } from "react";
-import { Menu, MenuItem, Hidden } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useCSVDownloader } from "react-papaparse";
-import { useState } from "react";
+import React, { useEffect, useState } from 'react';
+
+import MenuIcon from '@mui/icons-material/Menu';
+import { Menu, MenuItem, Hidden } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { useCSVDownloader } from 'react-papaparse';
+import { useSelector } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
+
 import {
-  getActiveUser,
+  // getActiveUser,
   getCurrentUser,
   loggedOut,
-  saveAddContactDetails,
-} from "../Storage/Storage";
-
-const exportData = () => {
-  const contactData = getActiveUser();
-  console.log("exportData", contactData);
-  // setOpen(true);
-  return contactData;
-};
+  // saveAddContactDetails,
+} from '../storage/Storage';
 
 export function NavBar() {
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const state = useSelector((state) => state);
   const { CSVDownloader } = useCSVDownloader();
 
   const handleMenu = (event) => {
@@ -37,26 +31,34 @@ export function NavBar() {
     setAnchorEl(null);
   };
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
 
   const navigate = useNavigate();
   function logout() {
     loggedOut();
-    navigate("/");
+    navigate('/');
   }
 
   useEffect(() => {
     const data = getCurrentUser();
     // console.log("Home", data);
     if (data?.length > 0 || data !== null) {
-      setUsername(data.email ? data.email.split("@")[0] : "");
+      setUsername(data.email ? data.email.split('@')[0] : '');
     }
   }, []);
+
+  const exportData = () => {
+    // const contactData = getActiveUser();
+    // console.log('exportData', contactData);
+    // // setOpen(true);
+    // return contactData;
+    return state;
+  };
 
   return (
     <>
       <AppBar position="static">
-        <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
+        <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             Welcome {username} !!
           </Typography>
@@ -73,13 +75,13 @@ export function NavBar() {
               id="menu-appbar"
               anchorEl={anchorEl}
               anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: 'top',
+                horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: 'top',
+                horizontal: 'right',
               }}
               open={Boolean(anchorEl)}
               onClose={handleCloseMenu}
@@ -97,8 +99,8 @@ export function NavBar() {
                 className="export-btn"
                 // type={Type.Button}
                 bom={true}
-                filename={"EXPORTED-DATA"}
-                delimiter={";"}
+                filename={'EXPORTED-DATA'}
+                delimiter={';'}
                 data={exportData}
               >
                 <MenuItem onClick={exportData}>Export Contact</MenuItem>
@@ -120,8 +122,8 @@ export function NavBar() {
               className="export-btn"
               // type={Type.Button}
               bom={true}
-              filename={"EXPORTED-DATA"}
-              delimiter={";"}
+              filename={'EXPORTED-DATA'}
+              delimiter={';'}
               data={exportData}
             >
               {/* <FileUploadIcon sx={{}} /> */}

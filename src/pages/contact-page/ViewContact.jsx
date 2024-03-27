@@ -1,31 +1,34 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { useNavigate } from "react-router-dom";
+import * as React from 'react';
+import { forwardRef } from 'react';
+
+import ContactsIcon from '@mui/icons-material/Contacts';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import MuiAlert from '@mui/material/Alert';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Paper from '@mui/material/Paper';
+import Slide from '@mui/material/Slide';
+import Snackbar from '@mui/material/Snackbar';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 // import { deleteContact } from "../../Storage/Storage";
-import Avatar from "@mui/material/Avatar";
-import "../ContactPage/ViewContact.css";
-import { forwardRef } from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Slide from "@mui/material/Slide";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-import Button from "@mui/material/Button";
-import ContactsIcon from "@mui/icons-material/Contacts";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogActions from "@mui/material/DialogActions";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteContacts } from "../../Action/Action";
+
+import './ViewContact.css';
+
+import { deleteContacts } from '../../action/Action';
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -41,31 +44,32 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
+  '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
   },
   // hide last border
-  "&:last-child td, &:last-child th": {
+  '&:last-child td, &:last-child th': {
     border: 0,
   },
 }));
 
 export default function ViewContact() {
   const dispatch = useDispatch();
-  const vertical = "top";
-  const horizontal = "right";
+  const vertical = 'top';
+  const horizontal = 'right';
   const [open, setOpen] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   // const [rows, setRows] = React.useState(getAddContactDetails());
-
-  const rows = useSelector((state) => state.contacts);
-  console.log("rowss", rows);
+  const [userId, setUserId] = React.useState();
+  const rows = useSelector((state) => state);
+  console.log('rowss', rows);
 
   const handleDialogOpen = () => {
     setOpenDialog(true);
   };
 
   const handleDialogClose = () => {
+    dispatch(deleteContacts(userId));
     setOpenDialog(false);
     // setRows(getAddContactDetails());
     setOpen(true);
@@ -74,7 +78,7 @@ export default function ViewContact() {
     setOpenDialog(false);
   };
   const handleDelete = (userId) => {
-    dispatch(deleteContacts(userId));
+    setUserId(userId);
     setOpenDialog(true);
   };
 
@@ -87,7 +91,7 @@ export default function ViewContact() {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
     setOpen(false);
@@ -126,22 +130,22 @@ export default function ViewContact() {
         TransitionComponent={TransitionLeft}
         anchorOrigin={{ vertical, horizontal }}
       >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           Contact Deleted SuccessFully!!
         </Alert>
       </Snackbar>
       {rows?.length === 0 ? (
         <div
           style={{
-            textAlign: "center",
-            marginTop: "200px",
+            textAlign: 'center',
+            marginTop: '200px',
             // border: "2px solid",
           }}
         >
           <h1>No contacts found, Please add contacts.</h1>
           <Button
             variant="contained"
-            onClick={() => navigate("/contacts/add-contact")}
+            onClick={() => navigate('/contacts/add-contact')}
           >
             <ContactsIcon sx={{ mr: 2 }} />
             Add Contact
@@ -170,11 +174,11 @@ export default function ViewContact() {
                   <StyledTableCell align="right">{row?.phone}</StyledTableCell>
                   <StyledTableCell align="right">
                     <EditIcon
-                      sx={{ mr: 2, cursor: "pointer" }}
+                      sx={{ mr: 2, cursor: 'pointer' }}
                       onClick={() => handleEdit(row?.userId)}
                     />
                     <DeleteIcon
-                      sx={{ cursor: "pointer" }}
+                      sx={{ cursor: 'pointer' }}
                       onClick={() => {
                         handleDelete(row?.userId);
                         handleDialogOpen();

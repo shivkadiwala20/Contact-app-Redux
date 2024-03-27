@@ -1,28 +1,27 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import * as yup from "yup";
-import Box from "@mui/material/Box";
-// import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useRef, useState, forwardRef } from "react";
-import "../ContactPage/AddContact.css";
-import { useNavigate, useParams } from "react-router-dom";
-import {
-  getActiveUser,
-  getCurrentUser,
-  setContactInStorage,
-} from "../../Storage/Storage";
+import * as React from 'react';
+import { useRef, useState, forwardRef } from 'react';
 
-import Slide from "@mui/material/Slide";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
+import { yupResolver } from '@hookform/resolvers/yup';
+import MuiAlert from '@mui/material/Alert';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Slide from '@mui/material/Slide';
+import Snackbar from '@mui/material/Snackbar';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as yup from 'yup';
+
+import './AddContact.css';
+// import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { updateContacts } from '../../action/Action';
+import { getActiveUser, getCurrentUser } from '../../storage/Storage';
 
 const defaultTheme = createTheme();
 const Alert = forwardRef(function Alert(props, ref) {
@@ -31,20 +30,21 @@ const Alert = forwardRef(function Alert(props, ref) {
 
 const schema = yup
   .object({
-    name: yup.string().required("Name is required"),
-    email: yup.string().email().required("Email is required"),
+    name: yup.string().required('Name is required'),
+    email: yup.string().email().required('Email is required'),
     phone: yup
       .string()
-      .required("Phone number is required")
-      .matches(/^\d{10}$/, "Please enter a valid 10 digit phone number"),
+      .required('Phone number is required')
+      .matches(/^\d{10}$/, 'Please enter a valid 10 digit phone number'),
   })
   .required();
 
 export function EditContact() {
-  const vertical = "top";
-  const horizontal = "right";
+  const dispatch = useDispatch();
+  const vertical = 'top';
+  const horizontal = 'right';
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState('');
   // console.warn({ image });
   // const location = useLocation();
   const sessionData = getCurrentUser();
@@ -54,16 +54,16 @@ export function EditContact() {
   // console.log("userId", userId);
   const rowId = Number(userId);
   const editedData = getActiveUser([activeUser]);
-  // console.log("updatedContactData", editedData);
+  console.log('editedData', editedData);
   const editedContact = editedData.find((val) => val.userId === rowId);
-  console.log(editedContact);
+  console.log('editedContact', editedContact);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    mode: "onBlur",
+    mode: 'onBlur',
     resolver: yupResolver(schema),
     defaultValues: {
       name: editedContact.name,
@@ -76,10 +76,9 @@ export function EditContact() {
   const inputRef = useRef(null);
 
   const onSubmit = async (contactData) => {
-    // console.error("chal raha  hai", image);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const existingData = Object.keys(editedContact)
-      .filter((objKey) => objKey !== "userId")
+      .filter((objKey) => objKey !== 'userId')
       .reduce((newObj, key) => {
         newObj[key] = editedContact[key];
         return newObj;
@@ -87,13 +86,8 @@ export function EditContact() {
     // console.log("UpdatedData", contactData);
     if (image) {
       const reader = new FileReader();
-      reader.addEventListener("load", () => {
+      reader.addEventListener('load', () => {
         contactData.avatar = reader.result;
-        // setContactInStorage({
-        //   ...contactData,
-        //   userId: getUserId(),
-        // });
-
         if (JSON.stringify(existingData) !== JSON.stringify(contactData)) {
           existingData.name = contactData.name;
           existingData.phone = contactData.phone;
@@ -105,11 +99,12 @@ export function EditContact() {
             (obj) => obj.userId === editedContact.userId
           );
           editedData[indexToUpdate] = existingData;
-          setContactInStorage([activeUser], editedData);
+          // setContactInStorage([activeUser], editedData);
+          dispatch(updateContacts(existingData));
         }
         setOpen(true);
         setTimeout(() => {
-          navigate("/contacts/view-contact");
+          navigate('/contacts/view-contact');
         }, 1000);
       });
       // console.log("UpdatedData", contactData);
@@ -128,11 +123,11 @@ export function EditContact() {
           (obj) => obj.userId === editedContact.userId
         );
         editedData[indexToUpdate] = existingData;
-        setContactInStorage([activeUser], editedData);
+        dispatch(updateContacts(existingData));
       }
       setOpen(true);
       setTimeout(() => {
-        navigate("/contacts/view-contact");
+        navigate('/contacts/view-contact');
       }, 1000);
     }
     // console.log("UpdatedData", contactData);
@@ -148,7 +143,7 @@ export function EditContact() {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
     setOpen(false);
@@ -167,7 +162,7 @@ export function EditContact() {
         TransitionComponent={TransitionLeft}
         anchorOrigin={{ vertical, horizontal }}
       >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           Contact Updated SuccessFully!!
         </Alert>
       </Snackbar>
@@ -177,9 +172,9 @@ export function EditContact() {
           <Box
             sx={{
               marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
             }}
           >
             <Avatar
@@ -193,7 +188,7 @@ export function EditContact() {
               ref={inputRef}
               onChange={handleImageChange}
               accept="image/png, image/gif, image/jpeg"
-              style={{ display: "none" }}
+              style={{ display: 'none' }}
             />
             <Typography component="h1" variant="h5">
               Update Image
@@ -212,10 +207,10 @@ export function EditContact() {
                 label="Name"
                 name="name"
                 autoComplete="name"
-                {...register("name")}
+                {...register('name')}
               />
               {errors.name && (
-                <span style={{ color: "red", fontSize: "14px" }}>
+                <span style={{ color: 'red', fontSize: '14px' }}>
                   {errors.name?.message}
                 </span>
               )}
@@ -226,11 +221,11 @@ export function EditContact() {
                 type="email"
                 name="email"
                 required
-                {...register("email")}
+                {...register('email')}
                 className="email"
               />
               {errors.email && (
-                <span style={{ color: "red", fontSize: "14px" }}>
+                <span style={{ color: 'red', fontSize: '14px' }}>
                   {errors.email?.message}
                 </span>
               )}
@@ -242,10 +237,10 @@ export function EditContact() {
                 label="Phone Number"
                 type="tel"
                 id="phone"
-                {...register("phone")}
+                {...register('phone')}
               />
               {errors.phone && (
-                <span style={{ color: "red", fontSize: "14px" }}>
+                <span style={{ color: 'red', fontSize: '14px' }}>
                   {errors.phone?.message}
                 </span>
               )}
@@ -256,7 +251,7 @@ export function EditContact() {
                 sx={{ mt: 3, mb: 2 }}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Updating Contact...." : "UPDATE CONTACT"}
+                {isSubmitting ? 'Updating Contact....' : 'UPDATE CONTACT'}
               </Button>
             </Box>
           </Box>

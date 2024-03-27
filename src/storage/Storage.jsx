@@ -2,16 +2,16 @@ export const saveFormDataToLocalStorage = (formData) => {
   try {
     const existingData = getFormDataFromLocalStorage() || [];
     const updatedData = [...existingData, formData];
-    localStorage.setItem("formData", JSON.stringify(updatedData));
+    localStorage.setItem('formData', JSON.stringify(updatedData));
     return true;
   } catch (error) {
-    console.error("Error saving data to local storage:", error);
+    console.error('Error saving data to local storage:', error);
   }
 };
 
 export function setCurrentUser(data) {
   try {
-    return sessionStorage.setItem("activeUserId", JSON.stringify(data));
+    return sessionStorage.setItem('activeUserId', JSON.stringify(data));
   } catch (error) {
     throw new Error(error);
   }
@@ -19,35 +19,34 @@ export function setCurrentUser(data) {
 
 export const getCurrentUser = () => {
   try {
-    const FormData = JSON.parse(sessionStorage.getItem("activeUserId"));
+    const FormData = JSON.parse(sessionStorage.getItem('activeUserId'));
     return FormData;
   } catch (error) {
     throw new Error(error);
   }
 };
 export const loggedOut = () => {
-  sessionStorage.removeItem("activeUserId");
+  sessionStorage.removeItem('activeUserId');
 };
 export const getFormDataFromLocalStorage = () => {
   try {
-    const FormData = JSON.parse(localStorage.getItem("formData")) ?? [];
+    const FormData = JSON.parse(localStorage.getItem('formData')) ?? [];
     // console.log(FormData);
     return FormData;
   } catch (error) {
-    console.error("Error retrieving data from local storage:", error);
+    console.error('Error retrieving data from local storage:', error);
     return undefined;
   }
 };
 
-export const saveAddContactDetails = (contactData) => {
-  const sessionData = getCurrentUser();
-  const userId = sessionData.userId;
+export const saveAddContactDetails = (contactData, userId) => {
   // console.log("userId", userId);
-
+  console.log('userId', userId);
   const avaiLableData = getAddContactDetails() || [];
-  console.log("avaiLableData", avaiLableData);
+
   if (avaiLableData !== null) {
     const arr = JSON.parse(localStorage.getItem([userId])) || [];
+
     arr.push(contactData);
     localStorage.setItem([userId], JSON.stringify(arr));
   } else {
@@ -62,11 +61,12 @@ export const getAddContactDetails = () => {
     const sessionData = getCurrentUser();
     // console.log("SessionData", sessionData);
     const userId = sessionData?.userId;
+    console.log('getId', userId);
     const contactData = JSON.parse(localStorage.getItem(userId)) ?? [];
-    console.log("getContactData", contactData);
+    console.log('getContactData', contactData);
     return contactData;
   } catch (error) {
-    console.error("Error saving data to local storage:", error);
+    console.error('Error saving data to local storage:', error);
   }
 };
 export const deleteContact = (userId) => {
@@ -91,6 +91,26 @@ export const getActiveUser = (userId) => {
   return JSON.parse(localStorage.getItem(activeUser)) ?? [];
 };
 
-export const setContactInStorage = (userId, editedContact) => {
-  return localStorage.setItem(userId, JSON.stringify(editedContact));
+export const setContactInStorage = (userId, data) => {
+  return localStorage.setItem(userId, JSON.stringify(data));
+};
+
+export const updatedData = (newContactData) => {
+  const sessionData = getCurrentUser();
+  const userId = sessionData.userId;
+  const existingData = JSON.parse(localStorage.getItem(userId)) ?? [];
+  const updatedData = existingData.map((val) =>
+    val.userId === newContactData.userId ? newContactData : val
+  );
+  localStorage.setItem(userId, JSON.stringify(updatedData));
+  return true;
+};
+
+export const importContacts = (data) => {
+  const sessionData = getCurrentUser();
+  const userId = sessionData.userId;
+  const existingData = JSON.parse(localStorage.getItem(userId)) ?? [];
+  const updatedData = [...existingData, ...data];
+  localStorage.setItem(userId, JSON.stringify(updatedData));
+  return true;
 };

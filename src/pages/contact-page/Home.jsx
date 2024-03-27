@@ -1,14 +1,14 @@
-import * as React from "react";
+import * as React from 'react';
+import { useState, forwardRef, useEffect } from 'react';
 
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-import Slide from "@mui/material/Slide";
-import { useState, forwardRef } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import "../../index.css";
-import { getCurrentUser } from "../../Storage/Storage";
-import { useEffect } from "react";
-import { NavBar } from "../../Components/NavBar";
+import MuiAlert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
+import Snackbar from '@mui/material/Snackbar';
+import { Outlet, useNavigate } from 'react-router-dom';
+
+import '../../index.css';
+import { NavBar } from '../../components/NavBar';
+import { getCurrentUser } from '../../storage/Storage';
 
 export default function Home() {
   const Alert = forwardRef(function Alert(props, ref) {
@@ -20,14 +20,14 @@ export default function Home() {
     const isUserLoggedIn = getCurrentUser();
 
     if (!isUserLoggedIn) {
-      navigate("/");
+      navigate('/');
     } else {
-      navigate("/contacts/view-contact");
+      navigate('/contacts/view-contact');
     }
   }, [navigate]);
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
     setOpen(true);
@@ -38,8 +38,8 @@ export default function Home() {
   }
 
   const [open, setOpen] = useState(false);
-  const vertical = "top";
-  const horizontal = "right";
+  const vertical = 'top';
+  const horizontal = 'right';
 
   return (
     <>
@@ -50,7 +50,7 @@ export default function Home() {
         TransitionComponent={TransitionLeft}
         anchorOrigin={{ vertical, horizontal }}
       >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           Contact Exported Successfully !!
         </Alert>
       </Snackbar>
